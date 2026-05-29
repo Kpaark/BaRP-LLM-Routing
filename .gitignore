@@ -1,0 +1,45 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated artifacts (rebuilt by scripts in barp/)
+# Big tensors / tables live under data/ and are produced by Phase 1.
+# Training logs and checkpoints live under runs/ and are produced by Phase 2-3.
+data/*.npy
+data/*.npz
+data/*.pkl
+data/*.parquet
+data/*.csv
+data/*.json
+runs/
+*.joblib
+*.pt
+*.ckpt
+
+# Environment / secrets
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp

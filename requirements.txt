@@ -1,0 +1,15 @@
+# Core numerical stack
+numpy>=1.24.0
+pandas>=2.0.0
+tqdm>=4.66.0
+
+# Policy training (Phase 2-3)
+torch>=2.2.0
+
+# Splits + reference baselines + Pareto plots
+scikit-learn>=1.4.0
+matplotlib>=3.7.0
+
+# Notebook (optional, handy for the eval Pareto sweep)
+jupyter>=1.0.0
+ipykernel>=6.0.0
