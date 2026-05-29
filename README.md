@@ -8,15 +8,15 @@ The router is trained as a contextual bandit: at each step it sees a prompt
 embedding, picks one of 11 models, and observes the chosen model's quality
 score and cost (table lookup against RouterBench, no live LLM calls).
 
-This repository is built in two clearly-separated phases so that the
-contribution of the preference encoder is visible in the git history:
+This repository ships **two versions** of the router so that the contribution
+of the preference encoder is visible as a single diff:
 
-1. **Phase 2 - BaRP without preference encoding.** A REINFORCE policy over
-   prompt embeddings that maximizes raw quality. Establishes a baseline.
-2. **Phase 3 - BaRP with preference MLP and cost-quality tradeoff.** Adds the
-   preference encoder phi, samples preferences `w = (w_q, w_c)` on the
-   1-simplex each step, and uses the cost-capped reward
-   `r = w_q * q - w_c * min(c/tau, 1)`. This is the full Algorithm 1 below.
+- **Version A - BaRP without preference encoding.** A REINFORCE policy over
+  prompt embeddings that maximizes raw quality. Establishes a baseline.
+- **Version B - BaRP with preference MLP and cost-quality tradeoff.** Adds
+  the preference encoder phi, samples preferences `w = (w_q, w_c)` on the
+  1-simplex each step, and uses the cost-capped reward
+  `r = w_q * q - w_c * min(c/tau, 1)`. This is the full Algorithm 1 below.
 
 ![Algorithm 1: BaRP training and inference](figures/algorithm1.png)
 
@@ -25,7 +25,7 @@ contribution of the preference encoder is visible in the git history:
 ```
 BaRP_LLM_Routing/
   barp/                package code (models, env, trainers, eval)
-  data/                cached tensors built by Phase 1 (gitignored)
+  data/                cached tensors built by the data-pipeline step (gitignored)
   runs/                training logs / checkpoints (gitignored)
   figures/             plots committed to the repo (Algorithm 1, Pareto)
   scripts/             thin shell wrappers around python entry points
@@ -46,34 +46,59 @@ raw RouterBench pickle) and `../routerbench_gmm/` (provides cached prompt
 embeddings `data/embeddings.npy`) have already been run. See their READMEs
 for one-time setup.
 
-## Roadmap and reproduction commands
+## Reproduction commands
 
 The commands below are **not wired up yet** -- they describe the target API
-that each future PR will deliver. The scaffolding PR (this commit) only sets
-up the package skeleton.
+that each future PR will deliver. The current commit only sets up the
+package skeleton.
 
-| Phase | PR | Command | Output |
-|---|---|---|---|
-| 1 | `data-pipeline` | `python -m barp.build_bandit_table` | `data/X.npy`, `data/Q.npy`, `data/C.npy`, `data/models.json`, `data/splits.json` |
-| 2 | `barp-nopref` | `python -m barp.train_nopref --steps 10000` | `runs/nopref/<ts>/policy.pt` + metrics CSV |
-| 3 | `barp-pref-mlp` | `python -m barp.train --steps 10000 --tau 0.01` | `runs/barp/<ts>/policy.pt` + metrics CSV |
-| 3 | `barp-pref-mlp` | `python -m barp.eval_pareto` | `figures/pareto.png` |
+### Shared data pipeline
+
+```bash
+python -m barp.build_bandit_table
+```
+
+Produces `data/X.npy`, `data/Q.npy`, `data/C.npy`, `data/models.json`, and
+`data/splits.json` -- a single offline bandit table consumed by both
+versions of the router.
+
+### Version A - without preference encoding
+
+```bash
+python -m barp.train_nopref --steps 10000
+python -m barp.eval --checkpoint runs/nopref/<ts>/policy.pt
+```
+
+Produces `runs/nopref/<ts>/policy.pt` plus a metrics CSV and the headline
+evaluation table.
+
+### Version B - with preference MLP and cost-quality tradeoff
+
+```bash
+python -m barp.train        --steps 10000 --tau 0.01
+python -m barp.eval         --checkpoint runs/barp/<ts>/policy.pt
+python -m barp.eval_pareto  --checkpoint runs/barp/<ts>/policy.pt --out figures/pareto.png
+```
+
+Produces `runs/barp/<ts>/policy.pt`, the same headline table, and the
+cost-vs-quality Pareto figure obtained by sweeping `w_c` from 0 to 1 at
+inference time.
 
 ## Mapping to Algorithm 1
 
 | Line | Symbol | Implementation |
 |---|---|---|
 | 1 | encoder h | Frozen MPNet from `routerbench_gmm/encode_prompts.py`, loaded as cached `data/X.npy` |
-| 1 | preference MLP phi | `barp.model.BaRP.phi` (Phase 3 only) |
+| 1 | preference MLP phi | `barp.model.BaRP.phi` (Version B only) |
 | 1 | head g_theta | `barp.model.BaRP{NoPref,}.head` |
-| 1 | cost cap tau | CLI flag `--tau` (Phase 3) |
+| 1 | cost cap tau | CLI flag `--tau` (Version B) |
 | 1 | entropy coeff beta | CLI flag `--beta` |
-| 4 | sample w on 1-simplex | `Dirichlet([1,1]).sample()` (Phase 3) |
-| 5 | z = [h; u] | `torch.cat([h, phi(w)], dim=-1)` (Phase 3) |
+| 4 | sample w on 1-simplex | `Dirichlet([1,1]).sample()` (Version B) |
+| 5 | z = [h; u] | `torch.cat([h, phi(w)], dim=-1)` (Version B) |
 | 6 | pi = softmax(o) | `logits.softmax(-1)` |
 | 7 | a ~ Categorical(pi) | `torch.distributions.Categorical(pi).sample()` |
 | 8 | observe q, c only for a | `barp.env.RouterBenchBandit.observe(a, idx)` |
-| 9 | r = w_q q - w_c min(c/tau, 1) | reward in `barp.train` (Phase 3; reduces to `r = q` in Phase 2) |
+| 9 | r = w_q q - w_c min(c/tau, 1) | reward in `barp.train` (Version B; reduces to `r = q` in Version A) |
 | 10 | batch baseline b | `r.mean()` |
 | 11 | loss with entropy bonus | `-((r - b).detach() * logp).mean() - beta * H.mean()` |
 | 14 | inference: argmax pi | `barp.eval` |
