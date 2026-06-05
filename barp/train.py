@@ -91,8 +91,8 @@ def main() -> None:
     parser.add_argument("--beta", type=float, default=0.01, help="entropy bonus coeff")
     parser.add_argument("--tau", type=float, default=None,
                         help="cost cap in USD; defaults to meta.json's p95 (~$0.008)")
-    parser.add_argument("--pref-hidden", type=int, default=64)
-    parser.add_argument("--pref-out", type=int, default=32)
+    parser.add_argument("--pref-hidden", type=int, default=256)
+    parser.add_argument("--pref-out", type=int, default=768)
     parser.add_argument("--head-hidden", type=int, default=256)
     parser.add_argument("--val-every", type=int, default=500)
     parser.add_argument("--log-every", type=int, default=50)

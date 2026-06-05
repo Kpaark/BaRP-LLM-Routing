@@ -48,8 +48,8 @@ class BaRP(nn.Module):
         embed_dim: int = 768,
         n_actions: int = 11,
         pref_dim: int = 2,
-        pref_hidden: int = 64,
-        pref_out: int = 32,
+        pref_hidden: int = 256,
+        pref_out: int = 768,
         head_hidden: int = 256,
     ) -> None:
         super().__init__()
