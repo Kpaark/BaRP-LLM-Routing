@@ -10,6 +10,9 @@ torch>=2.2.0
 scikit-learn>=1.4.0
 matplotlib>=3.7.0
 
+# Per-prompt inference CLI (only required by `python -m barp.infer --prompt ...`)
+sentence-transformers>=2.6.0
+
 # Notebook (optional, handy for the eval Pareto sweep)
 jupyter>=1.0.0
 ipykernel>=6.0.0

@@ -43,3 +43,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Matplotlib local cache (used so font cache writes stay inside the workspace)
+.mpl-cache/
