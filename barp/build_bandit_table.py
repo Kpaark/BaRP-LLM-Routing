@@ -45,6 +45,30 @@ def stratified_split(
     return splits
 
 
+def ood_split(
+    families: pd.Series, ood_families: list[str], val_frac: float, seed: int,
+) -> dict[str, list[int]]:
+    """OOD split: families in `ood_families` go entirely to test, all others
+    are partitioned into train/val. Mirrors the paper's Table 3 setup."""
+    rng = np.random.default_rng(seed)
+    splits: dict[str, list[int]] = {"train": [], "val": [], "test": []}
+    fam_arr = families.to_numpy()
+    all_idx = np.arange(len(families))
+    test_mask = np.isin(fam_arr, ood_families)
+    splits["test"].extend(all_idx[test_mask].tolist())
+    id_idx = all_idx[~test_mask]
+    id_fams = fam_arr[~test_mask]
+    for fam in np.unique(id_fams):
+        idx = id_idx[id_fams == fam].copy()
+        rng.shuffle(idx)
+        n_val = int(round(len(idx) * val_frac))
+        splits["val"].extend(idx[:n_val].tolist())
+        splits["train"].extend(idx[n_val:].tolist())
+    for k in splits:
+        splits[k].sort()
+    return splits
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--embeddings", type=Path, default=DEFAULT_EMB)
@@ -54,6 +78,13 @@ def main() -> None:
     parser.add_argument("--val-frac", type=float, default=0.15)
     parser.add_argument("--test-frac", type=float, default=0.15)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--ood-families",
+        nargs="+",
+        default=None,
+        help="If set, switch to OOD split: listed families go entirely to test, "
+             "all others are partitioned into train/val. Replicates Table 3.",
+    )
     args = parser.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -93,8 +124,17 @@ def main() -> None:
             Q[np.isnan(Q[:, col]), col] = float(np.nanmean(Q[:, col]))
             C[np.isnan(C[:, col]), col] = float(np.nanmean(C[:, col]))
 
-    splits = stratified_split(ids["family"], args.val_frac, args.test_frac, args.seed)
+    if args.ood_families:
+        missing = set(args.ood_families) - set(ids["family"].unique())
+        if missing:
+            raise ValueError(f"OOD families not found in data: {sorted(missing)}")
+        splits = ood_split(ids["family"], args.ood_families, args.val_frac, args.seed)
+        print(f"  OOD split: held-out families = {args.ood_families}")
+    else:
+        splits = stratified_split(ids["family"], args.val_frac, args.test_frac, args.seed)
     print(f"  splits: train={len(splits['train']):,} val={len(splits['val']):,} test={len(splits['test']):,}")
+    test_fams = ids["family"].iloc[splits["test"]].value_counts()
+    print(f"  test families:\n{test_fams.to_string()}")
 
     c_train = C[np.array(splits["train"])].ravel()
     tau_candidates = {
@@ -107,6 +147,7 @@ def main() -> None:
     np.save(args.out_dir / "X.npy", X)
     np.save(args.out_dir / "Q.npy", Q)
     np.save(args.out_dir / "C.npy", C)
+    np.save(args.out_dir / "families.npy", ids["family"].to_numpy())
     (args.out_dir / "models.json").write_text(json.dumps(models, indent=2))
     (args.out_dir / "splits.json").write_text(json.dumps(splits))
     (args.out_dir / "meta.json").write_text(json.dumps({
@@ -119,6 +160,7 @@ def main() -> None:
         "seed": args.seed,
         "val_frac": args.val_frac,
         "test_frac": args.test_frac,
+        "ood_families": args.ood_families,
     }, indent=2))
     print(f"Wrote bandit table to {args.out_dir}")
 

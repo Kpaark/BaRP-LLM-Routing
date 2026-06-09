@@ -119,7 +119,6 @@ def main() -> None:
         head_hidden=args.head_hidden,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    pref_dist = torch.distributions.Dirichlet(torch.ones(2, device=device))
 
     run_dir = args.out_dir / time.strftime("%Y%m%d-%H%M%S")
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -138,7 +137,11 @@ def main() -> None:
     for step in range(1, args.steps + 1):
         idx, h_np = env.sample_batch(rng, split="train", batch_size=args.batch_size)
         h = torch.from_numpy(h_np).to(device)
-        w = pref_dist.sample((args.batch_size,))                # line 4: w_t ~ Dirichlet(1, 1)
+        # line 4: w_t ~ uniform on the 1-simplex. Dirichlet(1, 1) over 2 dims is
+        # equivalent to drawing w_c ~ U(0, 1); using torch.rand keeps this op on
+        # every backend (MPS lacks an aten::_sample_dirichlet kernel).
+        w_c_sample = torch.rand(args.batch_size, device=device)
+        w = torch.stack([1.0 - w_c_sample, w_c_sample], dim=-1)
 
         logits = model(h, w)                                    # lines 5-6: u = phi(w); z = [h;u]
         log_pi = logits.log_softmax(-1)
