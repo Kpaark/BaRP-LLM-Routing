@@ -13,6 +13,9 @@ matplotlib>=3.7.0
 # Per-prompt inference CLI (only required by `python -m barp.infer --prompt ...`)
 sentence-transformers>=2.6.0
 
+# Experiment tracking (optional; enabled with --wandb in barp.train)
+wandb>=0.16.0
+
 # Notebook (optional, handy for the eval Pareto sweep)
 jupyter>=1.0.0
 ipykernel>=6.0.0

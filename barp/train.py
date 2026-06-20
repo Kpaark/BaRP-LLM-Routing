@@ -17,6 +17,7 @@ Usage:
     python -m barp.train
     python -m barp.train --steps 10000 --batch-size 256 --lr 3e-4 --beta 0.01
     python -m barp.train --tau 0.01      # override the cost cap
+    python -m barp.train --wandb --wandb-project barp-llm-routing --wandb-run-name my_run
 """
 
 from __future__ import annotations
@@ -34,6 +35,8 @@ from torch import nn
 from .env import RouterBenchBandit
 from .model import BaRP
 from .utils import pick_device
+from .wandb_utils import finish as wandb_finish
+from .wandb_utils import log_split_labels, log_train_step, log_val_step, maybe_init_wandb
 
 
 METRIC_COLS = [
@@ -98,6 +101,10 @@ def main() -> None:
     parser.add_argument("--log-every", type=int, default=50)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", default="auto")
+    parser.add_argument("--wandb", action="store_true", help="log metrics to Weights & Biases")
+    parser.add_argument("--wandb-project", default="barp-llm-routing")
+    parser.add_argument("--wandb-run-name", default=None)
+    parser.add_argument("--wandb-entity", default=None, help="W&B team/username (optional)")
     args = parser.parse_args()
 
     device = pick_device(args.device)
@@ -122,9 +129,20 @@ def main() -> None:
 
     run_dir = args.out_dir / time.strftime("%Y%m%d-%H%M%S")
     run_dir.mkdir(parents=True, exist_ok=True)
+    run_config = {**vars(args), "resolved_tau": tau}
     (run_dir / "args.json").write_text(
-        json.dumps({**vars(args), "resolved_tau": tau}, indent=2, default=str)
+        json.dumps(run_config, indent=2, default=str)
     )
+
+    wb = maybe_init_wandb(
+        enabled=args.wandb,
+        project=args.wandb_project,
+        run_name=args.wandb_run_name,
+        entity=args.wandb_entity,
+        config=run_config,
+        run_dir=run_dir,
+    )
+    log_split_labels(wb, args.data_dir)
 
     log_f = (run_dir / "metrics.csv").open("w", newline="")
     log_writer = csv.writer(log_f)
@@ -170,6 +188,16 @@ def main() -> None:
                 f"q={q.mean().item():.4f}  c=${c.mean().item():.4f}  "
                 f"w_q={w[:, 0].mean().item():.2f}  H(pi)={entropy.mean().item():.3f}"
             )
+            log_train_step(
+                wb, step,
+                loss=loss.item(),
+                reward=r.mean().item(),
+                quality=q.mean().item(),
+                cost_usd=c.mean().item(),
+                w_q=w[:, 0].mean().item(),
+                w_c=w[:, 1].mean().item(),
+                policy_entropy=entropy.mean().item(),
+            )
 
         if step % args.val_every == 0 or step == args.steps:
             val_metrics = evaluate(model, env, "val", device)
@@ -177,6 +205,12 @@ def main() -> None:
                 f"  [val @ w=(0.5, 0.5)] quality={val_metrics['mean_quality']:.4f}  "
                 f"cost=${val_metrics['mean_cost_usd']:.4f}  "
                 f"action_H={val_metrics['action_entropy_bits']:.2f} bits"
+            )
+            log_val_step(
+                wb, step,
+                quality=val_metrics["mean_quality"],
+                cost_usd=val_metrics["mean_cost_usd"],
+                action_entropy_bits=val_metrics["action_entropy_bits"],
             )
             if val_metrics["mean_quality"] > best_val_q:
                 best_val_q = val_metrics["mean_quality"]
@@ -199,6 +233,7 @@ def main() -> None:
         ])
 
     log_f.close()
+    wandb_finish(wb)
     print(f"best val quality @ w=(0.5, 0.5) = {best_val_q:.4f}; checkpoint at {best_ckpt}")
 
 

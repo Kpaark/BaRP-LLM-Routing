@@ -14,6 +14,12 @@ Usage:
     python -m barp.eval_ood \\
         --data-dir data_ood \\
         --checkpoint runs/barp_ood/<ts>/policy.pt
+
+    # Log test accuracy to the same W&B run as training:
+    python -m barp.eval_ood \\
+        --data-dir data_ood \\
+        --checkpoint runs/wandb_smoke3/<ts>/policy.pt \\
+        --wandb --wandb-project barp-llm-routing
 """
 
 from __future__ import annotations
@@ -28,6 +34,8 @@ import torch
 from .env import RouterBenchBandit
 from .model import BaRP
 from .utils import pick_device
+from .wandb_utils import finish as wandb_finish
+from .wandb_utils import log_test_results, maybe_resume_wandb
 
 
 # Preference points to evaluate. The paper's Table 3 reports a single setting;
@@ -75,6 +83,14 @@ def main() -> None:
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--w-c", type=float, nargs="+", default=list(DEFAULT_W_C))
     parser.add_argument("--device", default="auto")
+    parser.add_argument("--wandb", action="store_true", help="log test metrics to Weights & Biases")
+    parser.add_argument("--wandb-project", default="barp-llm-routing")
+    parser.add_argument("--wandb-run-id", default=None,
+                        help="attach to an existing run; defaults to checkpoint dir wandb_run_id.txt")
+    parser.add_argument("--wandb-run-name", default=None)
+    parser.add_argument("--wandb-entity", default=None)
+    parser.add_argument("--wandb-primary-w-c", type=float, default=0.5,
+                        help="w_c used for summary test/quality_* metrics")
     args = parser.parse_args()
 
     device = pick_device(args.device)
@@ -94,6 +110,23 @@ def main() -> None:
 
     ckpt = torch.load(args.checkpoint, map_location=device, weights_only=False)
     ckpt_args = ckpt["args"]
+    run_dir = args.checkpoint.parent
+
+    wb = maybe_resume_wandb(
+        enabled=args.wandb,
+        project=args.wandb_project,
+        run_id=args.wandb_run_id,
+        run_name=args.wandb_run_name,
+        entity=args.wandb_entity,
+        run_dir=run_dir,
+        config={
+            "eval_split": "test",
+            "checkpoint": str(args.checkpoint),
+            "data_dir": str(args.data_dir),
+            "w_c_sweep": args.w_c,
+        },
+    )
+
     model = BaRP(
         embed_dim=env.embed_dim,
         n_actions=env.n_actions,
@@ -145,6 +178,14 @@ def main() -> None:
         "rows": table,
     }, indent=2))
     print(f"\nWrote {out_path}")
+
+    log_test_results(
+        wb,
+        fam_order=fam_order,
+        rows=table,
+        primary_w_c=args.wandb_primary_w_c,
+    )
+    wandb_finish(wb)
 
 
 if __name__ == "__main__":
