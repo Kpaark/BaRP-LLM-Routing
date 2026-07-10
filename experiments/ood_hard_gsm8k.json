@@ -1,0 +1,10 @@
+{
+  "name": "ood_hard_gsm8k",
+  "train_families": "rest",
+  "test_families": [
+    "GSM8K"
+  ],
+  "val_frac": 0.15,
+  "test_frac": 0.0,
+  "seed": 42
+}

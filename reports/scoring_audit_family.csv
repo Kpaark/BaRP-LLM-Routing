@@ -1,0 +1,9 @@
+family,n_pairs,n_prompts,pct_zero,pct_one,pct_frac,n_unique,min,max,mean,scoring
+ARC-Challenge,16170,1470,21.24,78.76,0.0,2,0.0,1.0,0.7876,binary
+GSM8K,81950,7450,0.4,0.35,99.25,5,0.0,1.0,0.5608,fractional
+HellaSwag,110462,10042,31.67,68.33,0.0,2,0.0,1.0,0.6833,binary
+MBPP,4697,427,48.44,51.56,0.0,2,0.0,1.0,0.5156,binary
+MMLU,154462,14042,39.53,60.47,0.0,2,0.0,1.0,0.6047,binary
+MT-Bench,880,80,0.0,31.59,68.41,10,0.1,1.0,0.6292,fractional
+RAG,18909,1719,54.32,29.97,15.71,5,0.0,1.0,0.4002,fractional
+Winogrande,13937,1267,39.36,60.64,0.0,2,0.0,1.0,0.6064,binary

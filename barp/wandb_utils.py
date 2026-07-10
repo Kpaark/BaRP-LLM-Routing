@@ -50,8 +50,18 @@ def maybe_init_wandb(
     entity: str | None,
     config: dict[str, Any],
     run_dir: Path,
+    group: str | None = None,
+    job_type: str | None = None,
+    tags: list[str] | None = None,
 ) -> WandbSession | None:
-    """Start a W&B run and persist the run id for later eval attachment."""
+    """Start a W&B run and persist the run id for later eval attachment.
+
+    Organization conventions (so the dashboard stays navigable):
+      * group    = experiment name from the split spec (e.g. "ood_mbpp_hellaswag"),
+                   so repeated seeds of the same experiment nest together
+      * job_type = "train" or "eval"
+      * tags     = ["in_distribution"] or ["ood"], plus anything caller adds
+    """
     if not enabled:
         return None
 
@@ -65,10 +75,16 @@ def maybe_init_wandb(
         entity=entity or None,
         config=config,
         dir=str(run_dir),
+        group=group,
+        job_type=job_type,
+        tags=tags or None,
     )
     session = WandbSession(run)
     (run_dir / "wandb_run_id.txt").write_text(session.run_id)
-    print(f"wandb run: {session.project}/{session.run_name}  id={session.run_id}")
+    label = f"{session.project}/{session.run_name}"
+    if group:
+        label += f"  group={group}"
+    print(f"wandb run: {label}  id={session.run_id}")
     return session
 
 
@@ -114,6 +130,12 @@ def maybe_resume_wandb(
         dir=str(run_dir),
     )
     session = WandbSession(run)
+    # Mark that this run now carries test results (searchable in the UI).
+    try:
+        if "evaluated" not in (run.tags or ()):
+            run.tags = (*(run.tags or ()), "evaluated")
+    except Exception as exc:
+        print(f"warning: could not add 'evaluated' tag ({exc})")
     print(f"wandb resumed: {session.project}/{session.run_name}  id={session.run_id}")
     return session
 
@@ -221,7 +243,9 @@ def log_split_labels(session: WandbSession | None, data_dir: Path) -> None:
     if meta_path.exists():
         meta = json.loads(meta_path.read_text())
     session.run.config.update({
-        "split_mode": "ood" if meta.get("ood_families") else "stratified",
+        "split_mode": meta.get("split_mode")
+        or ("ood" if meta.get("ood_families") else "in_distribution"),
+        "split_spec": meta.get("split_spec"),
         "ood_families": meta.get("ood_families"),
         **split_summary,
     })

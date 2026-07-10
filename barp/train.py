@@ -34,6 +34,7 @@ from torch import nn
 
 from .env import RouterBenchBandit
 from .model import BaRP
+from .splits import load_spec_from_data_dir, read_split_mode
 from .utils import pick_device
 from .wandb_utils import finish as wandb_finish
 from .wandb_utils import log_split_labels, log_train_step, log_val_step, maybe_init_wandb
@@ -103,8 +104,14 @@ def main() -> None:
     parser.add_argument("--device", default="auto")
     parser.add_argument("--wandb", action="store_true", help="log metrics to Weights & Biases")
     parser.add_argument("--wandb-project", default="barp-llm-routing")
-    parser.add_argument("--wandb-run-name", default=None)
+    parser.add_argument("--wandb-run-name", default=None,
+                        help="defaults to <spec_name>-seed<seed>")
     parser.add_argument("--wandb-entity", default=None, help="W&B team/username (optional)")
+    parser.add_argument("--wandb-group", default=None,
+                        help="defaults to the split-spec name, so seeds of one "
+                             "experiment nest together in the dashboard")
+    parser.add_argument("--wandb-tags", nargs="+", default=None,
+                        help="extra tags; 'in_distribution'/'ood' is always added")
     args = parser.parse_args()
 
     device = pick_device(args.device)
@@ -116,6 +123,12 @@ def main() -> None:
 
     env = RouterBenchBandit(args.data_dir)
     print(f"loaded bandit table: N={env.X.shape[0]:,}  A={env.n_actions}  embed_dim={env.embed_dim}")
+
+    # The data dir is self-describing: recover which families are in train/test
+    # so the run config (and W&B) records exactly what experiment this is.
+    spec = load_spec_from_data_dir(args.data_dir)
+    if spec is not None:
+        print(f"split spec: {spec.to_dict()}")
 
     model = BaRP(
         embed_dim=env.embed_dim,
@@ -129,7 +142,14 @@ def main() -> None:
 
     run_dir = args.out_dir / time.strftime("%Y%m%d-%H%M%S")
     run_dir.mkdir(parents=True, exist_ok=True)
-    run_config = {**vars(args), "resolved_tau": tau}
+    split_mode = read_split_mode(args.data_dir)
+    run_config = {**vars(args), "resolved_tau": tau, "split_mode": split_mode}
+    if spec is not None:
+        run_config["split_spec"] = spec.to_dict()
+        if args.wandb_run_name is None:
+            args.wandb_run_name = f"{spec.name}-seed{args.seed}"
+        if args.wandb_group is None:
+            args.wandb_group = spec.name
     (run_dir / "args.json").write_text(
         json.dumps(run_config, indent=2, default=str)
     )
@@ -141,6 +161,9 @@ def main() -> None:
         entity=args.wandb_entity,
         config=run_config,
         run_dir=run_dir,
+        group=args.wandb_group,
+        job_type="train",
+        tags=[split_mode, *(args.wandb_tags or [])],
     )
     log_split_labels(wb, args.data_dir)
 

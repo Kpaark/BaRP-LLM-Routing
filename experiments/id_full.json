@@ -1,0 +1,8 @@
+{
+  "name": "id_full",
+  "train_families": "all",
+  "test_families": "all",
+  "val_frac": 0.15,
+  "test_frac": 0.15,
+  "seed": 42
+}

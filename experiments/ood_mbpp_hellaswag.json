@@ -1,0 +1,8 @@
+{
+  "name": "ood_mbpp_hellaswag",
+  "train_families": "rest",
+  "test_families": ["MBPP", "HellaSwag"],
+  "val_frac": 0.15,
+  "test_frac": 0.0,
+  "seed": 42
+}

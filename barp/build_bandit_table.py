@@ -1,12 +1,23 @@
 """Build the offline bandit table consumed by both Version A and Version B.
 
 Joins frozen MPNet embeddings with RouterBench per-(prompt, model) quality and
-cost, splits stratified by task family, and writes everything under data/:
+cost, assigns prompts to train/val/test according to a SplitSpec (see
+barp/splits.py), and writes everything under the output dir:
 
-    X.npy, Q.npy, C.npy, models.json, splits.json, meta.json
+    X.npy, Q.npy, C.npy, families.npy, models.json, splits.json, meta.json
+
+The split is fully described by a spec: which families are trained on and
+which are tested on. Same code path covers ID and OOD experiments.
 
 Usage:
+    # In-distribution (default): every family in train AND test
     python -m barp.build_bandit_table
+
+    # From a config file (recommended: one file = one experiment)
+    python -m barp.build_bandit_table --config experiments/ood_mbpp_hellaswag.json --out-dir data_ood
+
+    # Inline OOD: held-out families to test, the rest to train/val
+    python -m barp.build_bandit_table --test-families MBPP HellaSwag --train-families rest --out-dir data_ood
 """
 
 from __future__ import annotations
@@ -18,6 +29,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from .splits import ALL, SplitSpec, make_splits
+
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_EMB = REPO_ROOT.parent / "routerbench_gmm" / "data" / "embeddings.npy"
@@ -26,47 +39,26 @@ DEFAULT_PKL = REPO_ROOT.parent / "RouterBench_stats" / "data" / "routerbench_raw
 DEFAULT_OUT = REPO_ROOT / "data"
 
 
-def stratified_split(
-    families: pd.Series, val_frac: float, test_frac: float, seed: int,
-) -> dict[str, list[int]]:
-    """Stratify by task family so every split sees every family proportionally."""
-    rng = np.random.default_rng(seed)
-    splits: dict[str, list[int]] = {"train": [], "val": [], "test": []}
-    for _, idx in families.groupby(families).indices.items():
-        idx = np.asarray(idx)
-        rng.shuffle(idx)
-        n_test = int(round(len(idx) * test_frac))
-        n_val = int(round(len(idx) * val_frac))
-        splits["test"].extend(idx[:n_test].tolist())
-        splits["val"].extend(idx[n_test : n_test + n_val].tolist())
-        splits["train"].extend(idx[n_test + n_val :].tolist())
-    for k in splits:
-        splits[k].sort()
-    return splits
-
-
-def ood_split(
-    families: pd.Series, ood_families: list[str], val_frac: float, seed: int,
-) -> dict[str, list[int]]:
-    """OOD split: families in `ood_families` go entirely to test, all others
-    are partitioned into train/val. Mirrors the paper's Table 3 setup."""
-    rng = np.random.default_rng(seed)
-    splits: dict[str, list[int]] = {"train": [], "val": [], "test": []}
-    fam_arr = families.to_numpy()
-    all_idx = np.arange(len(families))
-    test_mask = np.isin(fam_arr, ood_families)
-    splits["test"].extend(all_idx[test_mask].tolist())
-    id_idx = all_idx[~test_mask]
-    id_fams = fam_arr[~test_mask]
-    for fam in np.unique(id_fams):
-        idx = id_idx[id_fams == fam].copy()
-        rng.shuffle(idx)
-        n_val = int(round(len(idx) * val_frac))
-        splits["val"].extend(idx[:n_val].tolist())
-        splits["train"].extend(idx[n_val:].tolist())
-    for k in splits:
-        splits[k].sort()
-    return splits
+def spec_from_args(args: argparse.Namespace) -> SplitSpec:
+    if args.config is not None:
+        spec = SplitSpec.from_file(args.config)
+        print(f"split spec from {args.config}: {spec.to_dict()}")
+        return spec
+    train_fams = args.train_families if args.train_families else ALL
+    test_fams = args.test_families if args.test_families else ALL
+    if isinstance(train_fams, list) and len(train_fams) == 1 and train_fams[0] in (ALL, "rest"):
+        train_fams = train_fams[0]
+    if isinstance(test_fams, list) and len(test_fams) == 1 and test_fams[0] == ALL:
+        test_fams = ALL
+    name = args.name or ("id_full" if train_fams == ALL and test_fams == ALL else "custom")
+    return SplitSpec(
+        name=name,
+        train_families=train_fams,
+        test_families=test_fams,
+        val_frac=args.val_frac,
+        test_frac=args.test_frac,
+        seed=args.seed,
+    )
 
 
 def main() -> None:
@@ -75,18 +67,22 @@ def main() -> None:
     parser.add_argument("--ids", type=Path, default=DEFAULT_IDS)
     parser.add_argument("--pkl", type=Path, default=DEFAULT_PKL)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--config", type=Path, default=None,
+                        help="JSON split-spec file (overrides the flags below)")
+    parser.add_argument("--name", default=None, help="experiment name for the spec")
+    parser.add_argument("--train-families", nargs="+", default=None,
+                        help="families to train on; 'all' (default) or 'rest' "
+                             "(= everything not in --test-families)")
+    parser.add_argument("--test-families", nargs="+", default=None,
+                        help="families to test on; 'all' (default). A family in "
+                             "test but not train is fully held out (OOD).")
     parser.add_argument("--val-frac", type=float, default=0.15)
     parser.add_argument("--test-frac", type=float, default=0.15)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument(
-        "--ood-families",
-        nargs="+",
-        default=None,
-        help="If set, switch to OOD split: listed families go entirely to test, "
-             "all others are partitioned into train/val. Replicates Table 3.",
-    )
     args = parser.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
+
+    spec = spec_from_args(args)
 
     print(f"Loading embeddings from {args.embeddings}")
     X = np.load(args.embeddings).astype(np.float32)
@@ -124,17 +120,18 @@ def main() -> None:
             Q[np.isnan(Q[:, col]), col] = float(np.nanmean(Q[:, col]))
             C[np.isnan(C[:, col]), col] = float(np.nanmean(C[:, col]))
 
-    if args.ood_families:
-        missing = set(args.ood_families) - set(ids["family"].unique())
-        if missing:
-            raise ValueError(f"OOD families not found in data: {sorted(missing)}")
-        splits = ood_split(ids["family"], args.ood_families, args.val_frac, args.seed)
-        print(f"  OOD split: held-out families = {args.ood_families}")
-    else:
-        splits = stratified_split(ids["family"], args.val_frac, args.test_frac, args.seed)
+    all_fams = sorted(ids["family"].unique().tolist())
+    train_fams, test_fams_resolved = spec.resolve(all_fams)
+    ood_fams = sorted(set(test_fams_resolved) - set(train_fams))
+    split_mode = "ood" if ood_fams else "in_distribution"
+    print(f"  spec '{spec.name}' ({split_mode})")
+    print(f"    train families: {train_fams}")
+    print(f"    test families:  {test_fams_resolved}" + (f"  (OOD: {ood_fams})" if ood_fams else ""))
+
+    splits = make_splits(ids["family"].to_numpy(), spec)
     print(f"  splits: train={len(splits['train']):,} val={len(splits['val']):,} test={len(splits['test']):,}")
-    test_fams = ids["family"].iloc[splits["test"]].value_counts()
-    print(f"  test families:\n{test_fams.to_string()}")
+    test_fam_counts = ids["family"].iloc[splits["test"]].value_counts()
+    print(f"  test families:\n{test_fam_counts.to_string()}")
 
     c_train = C[np.array(splits["train"])].ravel()
     tau_candidates = {
@@ -157,10 +154,11 @@ def main() -> None:
         "quality_mean": float(Q.mean()),
         "cost_mean_usd": float(C.mean()),
         "tau_candidates_usd": tau_candidates,
-        "seed": args.seed,
-        "val_frac": args.val_frac,
-        "test_frac": args.test_frac,
-        "ood_families": args.ood_families,
+        "split_spec": spec.to_dict(),
+        "split_mode": split_mode,
+        "train_families": train_fams,
+        "test_families": test_fams_resolved,
+        "ood_families": ood_fams or None,
     }, indent=2))
     print(f"Wrote bandit table to {args.out_dir}")
 

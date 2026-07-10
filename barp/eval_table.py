@@ -1,25 +1,25 @@
-"""Replicate Table 3 of the BaRP paper: OOD per-task quality.
+"""Per-family results table for ID and OOD experiments (paper Tables 2 / 3).
 
-Evaluates a Version B checkpoint on the OOD test split (built with
-`build_bandit_table.py --ood-families ...`) and reports mean quality
-**per task family** so the numbers line up directly with the paper's
-Table 3 (MBPP, HellaSwag, HpQA, Avg).
+Evaluates a Version B checkpoint on the test split of any data dir built by
+`build_bandit_table.py` and reports mean quality **per task family**. The data
+dir's meta.json says whether the test set is in-distribution (Table 2 style)
+or held-out families (Table 3 style); the report is labeled accordingly.
 
-The output adds two reference rows from the paper:
+Reference rows:
     * Smallest LLM  -- always pick the cheapest model (Mistral-7B)
     * Largest LLM   -- always pick the strongest model (GPT-4)
-plus our BaRP policy evaluated at several preference points.
+    * Oracle        -- per-prompt argmax quality (upper bound)
+plus the BaRP policy evaluated at several preference points.
 
 Usage:
-    python -m barp.eval_ood \\
-        --data-dir data_ood \\
-        --checkpoint runs/barp_ood/<ts>/policy.pt
+    # In-distribution (Table 2 style)
+    python -m barp.eval_table --data-dir data --checkpoint runs/barp/<ts>/policy.pt
 
-    # Log test accuracy to the same W&B run as training:
-    python -m barp.eval_ood \\
-        --data-dir data_ood \\
-        --checkpoint runs/wandb_smoke3/<ts>/policy.pt \\
-        --wandb --wandb-project barp-llm-routing
+    # OOD (Table 3 style)
+    python -m barp.eval_table --data-dir data_ood --checkpoint runs/barp_ood/<ts>/policy.pt
+
+    # Log to the same W&B run as training:
+    python -m barp.eval_table --data-dir data --checkpoint <...>/policy.pt --wandb
 """
 
 from __future__ import annotations
@@ -38,8 +38,8 @@ from .wandb_utils import finish as wandb_finish
 from .wandb_utils import log_test_results, maybe_resume_wandb
 
 
-# Preference points to evaluate. The paper's Table 3 reports a single setting;
-# we sweep several so you can see how OOD quality trades against w_c.
+# Preference points to evaluate. The paper reports single settings; we sweep
+# several so you can see how quality trades against w_c.
 DEFAULT_W_C = (0.0, 0.25, 0.5, 0.75, 1.0)
 
 # Paper-conventional "smallest" and "largest" LLMs in the RouterBench panel.
@@ -79,7 +79,7 @@ def per_family_quality(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data-dir", type=Path, default=Path("data_ood"))
+    parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--w-c", type=float, nargs="+", default=list(DEFAULT_W_C))
     parser.add_argument("--device", default="auto")
@@ -95,6 +95,11 @@ def main() -> None:
 
     device = pick_device(args.device)
     env = RouterBenchBandit(args.data_dir)
+
+    meta_path = args.data_dir / "meta.json"
+    meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}
+    split_mode = meta.get("split_mode") or ("ood" if meta.get("ood_families") else "in_distribution")
+    spec_name = (meta.get("split_spec") or {}).get("name", args.data_dir.name)
 
     fams_path = args.data_dir / "families.npy"
     if not fams_path.exists():
@@ -121,6 +126,8 @@ def main() -> None:
         run_dir=run_dir,
         config={
             "eval_split": "test",
+            "eval_split_mode": split_mode,
+            "eval_spec_name": spec_name,
             "checkpoint": str(args.checkpoint),
             "data_dir": str(args.data_dir),
             "w_c_sweep": args.w_c,
@@ -147,15 +154,18 @@ def main() -> None:
         a = np.full(len(eval_idx), env.models.index(name), dtype=np.int64)
         rows.append((label, per_family_quality(Q_eval, families_test, a)))
 
+    rows.append(("Oracle", per_family_quality(Q_eval, families_test, Q_eval.argmax(-1))))
+
     # ----- BaRP policy at several preference points -----
     for w_c in args.w_c:
         a = policy_actions(model, env, eval_idx, w_c, device)
         label = f"BaRP (Ours)  w_c={w_c:.2f}"
         rows.append((label, per_family_quality(Q_eval, families_test, a)))
 
-    # ----- print Table 3 style report -----
-    print(f"\nOOD evaluation on split = test  (N = {len(eval_idx):,})")
-    print(f"held-out families: {fam_order}")
+    # ----- print Table 2/3 style report -----
+    mode_label = "OOD" if split_mode == "ood" else "in-distribution"
+    print(f"\n{mode_label} evaluation  [spec: {spec_name}]  split = test  (N = {len(eval_idx):,})")
+    print(f"test families: {fam_order}")
     print(f"checkpoint: {args.checkpoint}")
 
     col_w = 14
@@ -170,9 +180,11 @@ def main() -> None:
         print(line)
         table.append({"method": label, **{fam: v for fam, v in zip(fam_order, vals)}, "Avg": avg})
 
-    out_path = args.checkpoint.parent / "eval_ood.json"
+    out_path = args.checkpoint.parent / f"eval_{split_mode}.json"
     out_path.write_text(json.dumps({
         "split": "test",
+        "split_mode": split_mode,
+        "spec_name": spec_name,
         "n_test": int(len(eval_idx)),
         "families": fam_order,
         "rows": table,
