@@ -77,6 +77,37 @@ def per_family_quality(
     return out
 
 
+def format_markdown_table(
+    fam_order: list[str],
+    table: list[dict],
+    *,
+    mode_label: str,
+    spec_name: str,
+    n_test: int,
+    checkpoint: Path,
+) -> str:
+    """Chat-style markdown table (Method | family... | Avg)."""
+    header = ["Method", *fam_order, "Avg"]
+    lines = [
+        f"# {mode_label} evaluation",
+        "",
+        f"- **spec:** `{spec_name}`",
+        f"- **split:** test (N = {n_test:,})",
+        f"- **checkpoint:** `{checkpoint}`",
+        "",
+        "| " + " | ".join(header) + " |",
+        "| " + " | ".join("---" for _ in header) + " |",
+    ]
+    for row in table:
+        cells = [str(row["method"])]
+        for fam in fam_order:
+            cells.append(f"{float(row[fam]):.1f}")
+        cells.append(f"{float(row['Avg']):.1f}")
+        lines.append("| " + " | ".join(cells) + " |")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
@@ -190,6 +221,16 @@ def main() -> None:
         "rows": table,
     }, indent=2))
     print(f"\nWrote {out_path}")
+
+    md_path = args.checkpoint.parent / f"eval_{split_mode}.md"
+    md_path.write_text(format_markdown_table(
+        fam_order, table,
+        mode_label=mode_label,
+        spec_name=spec_name,
+        n_test=len(eval_idx),
+        checkpoint=args.checkpoint,
+    ))
+    print(f"Wrote {md_path}")
 
     log_test_results(
         wb,
