@@ -1,0 +1,8 @@
+{
+  "name": "gsm8k_only",
+  "train_families": ["GSM8K"],
+  "test_families": ["GSM8K"],
+  "val_frac": 0.15,
+  "test_frac": 0.15,
+  "seed": 42
+}

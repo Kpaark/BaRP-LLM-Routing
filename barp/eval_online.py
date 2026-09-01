@@ -62,6 +62,7 @@ def run_stream(
     Q_eval: np.ndarray,
     C_eval: np.ndarray,
     barp_actions: np.ndarray,
+    arm_model_idx: list[int],
     greedy: str,
     eps_c: float,
     eps_max: float,
@@ -72,11 +73,13 @@ def run_stream(
 
     Q_eval/C_eval are (N, n_models); barp_actions is BaRP's per-prompt model
     choice (precomputed once -- the checkpoint is frozen, only the bandit
-    layer on top adapts).
+    layer on top adapts). arm_model_idx maps each fixed arm to a model column;
+    the BaRP arm is always appended last (n_arms = len(arm_model_idx) + 1).
     """
-    n_prompts, n_models = Q_eval.shape
-    n_arms = n_models + 1
-    barp_arm = n_models
+    n_prompts, _ = Q_eval.shape
+    n_fixed = len(arm_model_idx)
+    n_arms = n_fixed + 1
+    barp_arm = n_fixed
     rng = np.random.default_rng(seed)
 
     T = steps or n_prompts
@@ -107,7 +110,7 @@ def run_stream(
         else:
             arm = int(np.argmax(means))                  # exploit = argmax
 
-        model_a = int(barp_actions[i]) if arm == barp_arm else arm
+        model_a = int(barp_actions[i]) if arm == barp_arm else arm_model_idx[arm]
         q = float(Q_eval[i, model_a])                    # bandit feedback
         c = float(C_eval[i, model_a])
 
@@ -127,7 +130,29 @@ def run_stream(
         "avg_cost": float(cost.mean()),
         "eps_trace": eps_trace,
         "arms": arms,
+        "order": order,
     }
+
+
+def reference_running_curves(
+    Q_eval: np.ndarray,
+    orders: list[np.ndarray],
+    ref_actions: dict[str, np.ndarray],
+) -> dict[str, np.ndarray]:
+    """Running-average quality of fixed reference policies on the SAME streams.
+
+    Each reference policy is deterministic per prompt (its action never depends
+    on feedback), so its 'online run' is just the cumulative mean of its
+    qualities in stream order. Averaged over the same seed orders the bandit
+    saw, so the curves are directly comparable to the bandit curve."""
+    out: dict[str, np.ndarray] = {}
+    for name, actions in ref_actions.items():
+        per_seed = []
+        for order in orders:
+            q = Q_eval[order, actions[order]]
+            per_seed.append(np.cumsum(q) / np.arange(1, len(order) + 1))
+        out[name] = np.stack(per_seed).mean(0)
+    return out
 
 
 def main() -> None:
@@ -138,6 +163,12 @@ def main() -> None:
                         help="preference fed to the frozen BaRP arm (default 0 = quality-focused)")
     parser.add_argument("--greedy", choices=["barp", "argmax"], default="barp",
                         help="greedy arm: 'barp' (requested scheme) or classic 'argmax' control")
+    parser.add_argument("--arm-models", nargs="+", default=None,
+                        help="restrict fixed arms to these model names (default: all "
+                             "models). E.g. '--arm-models claude-v2' gives a two-armed "
+                             "bandit: claude-v2 + BaRP.")
+    parser.add_argument("--tag", default=None,
+                        help="suffix for output filenames, e.g. 'two_armed'")
     parser.add_argument("--eps-c", type=float, default=None,
                         help="c in eps_t = min(eps_max, c/t); default = n_arms")
     parser.add_argument("--eps-max", type=float, default=1.0)
@@ -163,7 +194,17 @@ def main() -> None:
     eval_idx, Q_eval, C_eval = env.qc_matrix("test")
     n = len(eval_idx)
     n_models = env.n_actions
-    n_arms = n_models + 1
+
+    # Fixed arms: all models by default, or a named subset (two-armed bandit).
+    if args.arm_models:
+        missing = [m for m in args.arm_models if m not in env.models]
+        if missing:
+            raise ValueError(f"unknown --arm-models {missing}; available: {env.models}")
+        arm_model_idx = [env.models.index(m) for m in args.arm_models]
+    else:
+        arm_model_idx = list(range(n_models))
+    n_fixed = len(arm_model_idx)
+    n_arms = n_fixed + 1
     eps_c = args.eps_c if args.eps_c is not None else float(n_arms)
 
     # ----- frozen BaRP arm: precompute its per-prompt model choice -----
@@ -187,6 +228,7 @@ def main() -> None:
     runs = [
         run_stream(
             Q_eval=Q_eval, C_eval=C_eval, barp_actions=barp_actions,
+            arm_model_idx=arm_model_idx,
             greedy=args.greedy, eps_c=eps_c, eps_max=args.eps_max,
             seed=s, steps=args.steps,
         )
@@ -210,13 +252,25 @@ def main() -> None:
     gpt4_a = env.models.index("gpt-4-1106-preview") if "gpt-4-1106-preview" in env.models else None
     gpt4 = float(fixed_means[gpt4_a]) if gpt4_a is not None else float("nan")
 
-    arm_names = [*env.models, f"BaRP (w_c={args.w_c:.2f})"]
+    # Reference policies replayed on the SAME shuffled streams -> running-average
+    # curves directly comparable to the bandit curve (separate tests, same experiment).
+    ref_actions = {
+        "pure BaRP": barp_actions,
+        f"best fixed ({env.models[best_fixed_a].split('/')[-1]})":
+            np.full(n, best_fixed_a, dtype=np.int64),
+        "oracle router": Q_eval.argmax(-1).astype(np.int64),
+    }
+    ref_curves = reference_running_curves(
+        Q_eval, [r["order"] for r in runs], ref_actions,
+    )
+
+    arm_names = [env.models[j] for j in arm_model_idx] + [f"BaRP (w_c={args.w_c:.2f})"]
 
     # ----- report -----
     print(f"\nOnline eps_t-greedy on '{spec_name}' test stream  "
           f"(N = {n:,}, T = {T:,}, seeds = {args.seeds})")
     print(f"greedy arm: {args.greedy}   eps_t = min({args.eps_max:g}, {eps_c:g}/t)   "
-          f"n_arms = {n_arms} ({n_models} models + BaRP)")
+          f"n_arms = {n_arms} ({n_fixed} models + BaRP)")
     print(f"checkpoint: {args.checkpoint}\n")
 
     print(f"{'Policy':<44s}{'Avg quality':>14s}{'Avg cost ($)':>14s}")
@@ -231,20 +285,24 @@ def main() -> None:
     if gpt4_a is not None:
         print(f"{'Always GPT-4':<44s}{100 * gpt4:>14.2f}"
               f"{float(C_eval[:, gpt4_a].mean()):>14.5f}")
-    print(f"{'Oracle (per-prompt max)':<44s}{100 * oracle:>14.2f}{'':>14s}")
+    print(f"{'Oracle router (per-prompt max)':<44s}{100 * oracle:>14.2f}{'':>14s}")
 
     print(f"\nPer-arm empirical means after the stream (avg over seeds):")
     print(f"{'Arm':<44s}{'pulls':>10s}{'emp. mean':>12s}{'true mean':>12s}")
     print("-" * 78)
+    def arm_true_mean(a: int) -> float:
+        return 100 * pure_barp if a == n_fixed else 100 * float(fixed_means[arm_model_idx[a]])
+
     order_by_mean = np.argsort(-means_mean)
     for a in order_by_mean:
-        true_m = 100 * pure_barp if a == n_models else 100 * float(fixed_means[a])
         pulled = counts_mean[a] > 0
         emp = f"{100 * means_mean[a]:.2f}" if pulled else "--"
-        print(f"{arm_names[a]:<44s}{counts_mean[a]:>10.1f}{emp:>12s}{true_m:>12.2f}")
+        print(f"{arm_names[a]:<44s}{counts_mean[a]:>10.1f}{emp:>12s}{arm_true_mean(a):>12.2f}")
 
     # ----- save json + md -----
     stem = f"eval_online_greedy_{args.greedy}"
+    if args.tag:
+        stem += f"_{args.tag}"
     out = {
         "spec_name": spec_name,
         "n_test": n,
@@ -266,9 +324,10 @@ def main() -> None:
         "oracle": 100 * oracle,
         "arm_pulls_mean": counts_mean.tolist(),
         "arm_empirical_means": (100 * means_mean).tolist(),
-        "arm_true_means": (100 * fixed_means).tolist() + [100 * pure_barp],
+        "arm_true_means": [arm_true_mean(a) for a in range(n_arms)],
         "running_avg_mean": (100 * curve_mean).tolist(),
         "running_avg_std": (100 * curve_std).tolist(),
+        "ref_running_avg": {k: (100 * v).tolist() for k, v in ref_curves.items()},
     }
     out_json = args.checkpoint.parent / f"{stem}.json"
     out_json.write_text(json.dumps(out, indent=2))
@@ -278,7 +337,7 @@ def main() -> None:
         f"# Online eps_t-greedy ({args.greedy}-greedy) on `{spec_name}`",
         "",
         f"- **stream:** test split, N = {n:,}, T = {T:,}, seeds = {args.seeds}",
-        f"- **eps_t:** min({args.eps_max:g}, {eps_c:g}/t)   |   **arms:** {n_models} models + frozen BaRP (w_c={args.w_c:.2f})",
+        f"- **eps_t:** min({args.eps_max:g}, {eps_c:g}/t)   |   **arms:** {n_fixed} models + frozen BaRP (w_c={args.w_c:.2f})",
         f"- **checkpoint:** `{args.checkpoint}`",
         "",
         "| Policy | Avg quality | Avg cost ($) |",
@@ -287,7 +346,7 @@ def main() -> None:
         f"| Pure BaRP | {100 * pure_barp:.2f} | {float(C_eval[rows_ref, barp_actions].mean()):.5f} |",
         f"| Best fixed ({env.models[best_fixed_a]}) | {100 * best_fixed:.2f} | {float(C_eval[:, best_fixed_a].mean()):.5f} |",
         f"| Always GPT-4 | {100 * gpt4:.2f} | {float(C_eval[:, gpt4_a].mean()) if gpt4_a is not None else float('nan'):.5f} |",
-        f"| Oracle | {100 * oracle:.2f} | |",
+        f"| Oracle router | {100 * oracle:.2f} | |",
         "",
         "## Per-arm stats (avg over seeds)",
         "",
@@ -295,9 +354,8 @@ def main() -> None:
         "| --- | --- | --- | --- |",
     ]
     for a in order_by_mean:
-        true_m = 100 * pure_barp if a == n_models else 100 * float(fixed_means[a])
         emp = f"{100 * means_mean[a]:.2f}" if counts_mean[a] > 0 else "--"
-        md.append(f"| {arm_names[a]} | {counts_mean[a]:.1f} | {emp} | {true_m:.2f} |")
+        md.append(f"| {arm_names[a]} | {counts_mean[a]:.1f} | {emp} | {arm_true_mean(a):.2f} |")
     out_md = args.checkpoint.parent / f"{stem}.md"
     out_md.write_text("\n".join(md) + "\n")
     print(f"Wrote {out_md}")
@@ -313,10 +371,14 @@ def main() -> None:
         ax.plot(ts, 100 * curve_mean, label=f"online {args.greedy}-greedy", color="C0")
         ax.fill_between(ts, 100 * (curve_mean - curve_std), 100 * (curve_mean + curve_std),
                         alpha=0.2, color="C0")
-        ax.axhline(100 * pure_barp, ls="--", color="C1", label="pure BaRP")
-        ax.axhline(100 * best_fixed, ls="--", color="C2",
-                   label=f"best fixed ({env.models[best_fixed_a].split('/')[-1]})")
-        ax.axhline(100 * oracle, ls=":", color="gray", label="oracle")
+        # References replayed on the same streams: running averages, not flat lines.
+        ref_styles = {
+            "pure BaRP": ("C1", "--"),
+            "oracle router": ("gray", ":"),
+        }
+        for name, curve in ref_curves.items():
+            color, ls = ref_styles.get(name, ("C2", "--"))
+            ax.plot(ts, 100 * curve, ls=ls, color=color, label=name)
         ax.set_xlabel("online step t")
         ax.set_ylabel("running avg quality (0-100)")
         ax.set_title(f"eps_t-greedy ({args.greedy} greedy) on {spec_name}  "
