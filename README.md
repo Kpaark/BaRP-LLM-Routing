@@ -25,70 +25,125 @@ of the preference encoder is visible as a single diff:
 ```
 BaRP_LLM_Routing/
   barp/                package code (models, env, trainers, eval)
-  data/                cached tensors built by the data-pipeline step (gitignored)
+  cache/               downloaded RouterBench pickle + embeddings (gitignored)
+  data/                in-distribution bandit table (gitignored, built locally)
+  data_ood/            OOD bandit tables (gitignored)
+  experiments/         split-spec JSON configs
   runs/                training logs / checkpoints (gitignored)
-  figures/             plots committed to the repo (Algorithm 1, Pareto)
-  scripts/             thin shell wrappers around python entry points
+  figures/             plots committed to the repo
+  scripts/             setup helpers
   requirements.txt
 ```
 
-## Setup
+## Quick start on a fresh Mac
+
+You only need this repo. Large data files are **not** committed to GitHub;
+they are downloaded and built locally (~1.1 GB download, then ~15–30 min
+encoding on Apple Silicon).
 
 ```bash
-cd BaRP_LLM_Routing
+git clone https://github.com/Kpaark/BaRP-LLM-Routing.git
+cd BaRP-LLM-Routing
+
+# Option A: one-shot script
+bash scripts/setup_mac.sh
+
+# Option B: manual steps
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+python -m barp.setup_data --all
 ```
 
-This project assumes the sibling repos `../RouterBench_stats/` (provides the
-raw RouterBench pickle) and `../routerbench_gmm/` (provides cached prompt
-embeddings `data/embeddings.npy`) have already been run. See their READMEs
-for one-time setup.
+What `--all` does:
 
-## Reproduction commands
+1. Downloads `routerbench_raw.pkl` from Hugging Face into `cache/`
+2. Encodes all prompts with MPNet (`cache/embeddings.npy`)
+3. Builds bandit tables: `data/`, `data_ood/`, `data_ood_hard/`, `data_gsm8k_only/`
 
-The commands below are **not wired up yet** -- they describe the target API
-that each future PR will deliver. The current commit only sets up the
-package skeleton.
+No API keys are required for training. You only need a Hugging Face account
+if the dataset download prompts for login (the public RouterBench dataset is
+free).
 
-### Shared data pipeline
+### Train and evaluate
 
 ```bash
-python -m barp.build_bandit_table
+source .venv/bin/activate
+
+# Version B — in-distribution BaRP
+python -m barp.train --data-dir data --out-dir runs/id_full --steps 10000 --seed 42
+
+# Evaluate (replace <ts> with the timestamp folder under runs/id_full/)
+python -m barp.eval_table --data-dir data --checkpoint runs/id_full/<ts>/policy.pt
+
+# Hard OOD: train on everything except GSM-8K, test on GSM-8K only
+python -m barp.train --data-dir data_ood_hard --out-dir runs/ood_hard_gsm8k --steps 10000
+python -m barp.eval_table --data-dir data_ood_hard --checkpoint runs/ood_hard_gsm8k/<ts>/policy.pt
 ```
 
-Produces `data/X.npy`, `data/Q.npy`, `data/C.npy`, `data/models.json`, and
-`data/splits.json` -- a single offline bandit table consumed by both
-versions of the router.
+Optional Weights & Biases logging: add `--wandb` after `wandb login`.
 
-### Version A - without preference encoding
+### Version A baseline (no preference encoder)
 
 ```bash
-python -m barp.train_nopref --steps 10000
+python -m barp.train_nopref --data-dir data --out-dir runs/nopref --steps 10000
 python -m barp.eval --checkpoint runs/nopref/<ts>/policy.pt
 ```
 
-Produces `runs/nopref/<ts>/policy.pt` plus a metrics CSV and the headline
-evaluation table.
+## Data setup (step by step)
 
-### Version B - with preference MLP and cost-quality tradeoff
+If you prefer to run setup in stages:
 
 ```bash
-python -m barp.train        --steps 10000 --tau 0.01
-python -m barp.eval         --checkpoint runs/barp/<ts>/policy.pt
-python -m barp.eval_pareto  --checkpoint runs/barp/<ts>/policy.pt --out figures/pareto.png
+source .venv/bin/activate
+
+# 1) Download RouterBench + build prompts.csv
+python -m barp.setup_data --download
+
+# 2) Encode prompts (uses MPS on Apple Silicon when available)
+python -m barp.setup_data --encode
+
+# 3) Build all experiment bandit tables
+python -m barp.setup_data --tables
 ```
 
-Produces `runs/barp/<ts>/policy.pt`, the same headline table, and the
-cost-vs-quality Pareto figure obtained by sweeping `w_c` from 0 to 1 at
-inference time.
+Rebuild a single experiment without redoing download/encode:
+
+```bash
+python -m barp.build_bandit_table --config experiments/ood_hard_gsm8k.json --out-dir data_ood_hard
+```
+
+## What is gitignored (and why)
+
+| Path | Size (approx.) | How to recreate |
+|---|---|---|
+| `cache/routerbench_raw.pkl` | ~1.1 GB | `python -m barp.setup_data --download` |
+| `cache/embeddings.npy` | ~110 MB | `python -m barp.setup_data --encode` |
+| `data/X.npy` | ~107 MB | `python -m barp.setup_data --tables` |
+| `runs/*/policy.pt` | small | `python -m barp.train ...` |
+
+GitHub rejects files over 100 MB, so these must be generated on each machine.
+
+## Legacy sibling-repo layout (optional)
+
+If you already maintain the separate `RouterBench_stats/` and
+`routerbench_gmm/` repos, you can still point `build_bandit_table` at their
+outputs:
+
+```bash
+python -m barp.build_bandit_table \
+  --pkl ../RouterBench_stats/data/routerbench_raw.pkl \
+  --embeddings ../routerbench_gmm/data/embeddings.npy \
+  --ids ../routerbench_gmm/data/embeddings.ids.csv
+```
+
+The recommended path for new collaborators is `python -m barp.setup_data --all`.
 
 ## Mapping to Algorithm 1
 
 | Line | Symbol | Implementation |
 |---|---|---|
-| 1 | encoder h | Frozen MPNet from `routerbench_gmm/encode_prompts.py`, loaded as cached `data/X.npy` |
+| 1 | encoder h | Frozen MPNet from `barp.setup_data`, loaded as cached `data/X.npy` |
 | 1 | preference MLP phi | `barp.model.BaRP.phi` (Version B only) |
 | 1 | head g_theta | `barp.model.BaRP{NoPref,}.head` |
 | 1 | cost cap tau | CLI flag `--tau` (Version B) |
@@ -101,7 +156,7 @@ inference time.
 | 9 | r = w_q q - w_c min(c/tau, 1) | reward in `barp.train` (Version B; reduces to `r = q` in Version A) |
 | 10 | batch baseline b | `r.mean()` |
 | 11 | loss with entropy bonus | `-((r - b).detach() * logp).mean() - beta * H.mean()` |
-| 14 | inference: argmax pi | `barp.eval` |
+| 14 | inference: argmax pi | `barp.eval_table` |
 
 ## References
 

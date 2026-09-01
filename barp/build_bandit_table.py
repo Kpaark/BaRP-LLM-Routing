@@ -33,9 +33,11 @@ from .splits import ALL, SplitSpec, make_splits
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_EMB = REPO_ROOT.parent / "routerbench_gmm" / "data" / "embeddings.npy"
-DEFAULT_IDS = REPO_ROOT.parent / "routerbench_gmm" / "data" / "embeddings.ids.csv"
-DEFAULT_PKL = REPO_ROOT.parent / "RouterBench_stats" / "data" / "routerbench_raw.pkl"
+CACHE_DIR = REPO_ROOT / "cache"
+# Self-contained defaults (populated by `python -m barp.setup_data --all`).
+DEFAULT_EMB = CACHE_DIR / "embeddings.npy"
+DEFAULT_IDS = CACHE_DIR / "embeddings.ids.csv"
+DEFAULT_PKL = CACHE_DIR / "routerbench_raw.pkl"
 DEFAULT_OUT = REPO_ROOT / "data"
 
 

@@ -18,10 +18,12 @@ build/
 .ipynb_checkpoints/
 
 # Generated artifacts (rebuilt by scripts in barp/)
-# Big tensors / tables live under data/ (in-distribution) or data_ood/ (OOD)
-# and are produced by build_bandit_table.py. Checkpoints live under runs/.
+# Big tensors / tables live under cache/ (HF download + embeddings),
+# data/ (in-distribution) or data_ood/ (OOD), and are produced by
+# setup_data.py / build_bandit_table.py. Checkpoints live under runs/.
 # GitHub rejects single files >100 MB, and X.npy is ~107 MB, so all of these
 # must stay out of version control and be regenerated locally.
+cache/
 data*/*.npy
 data*/*.npz
 data*/*.pkl
