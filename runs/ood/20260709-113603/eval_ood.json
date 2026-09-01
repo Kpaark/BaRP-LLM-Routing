@@ -1,0 +1,60 @@
+{
+  "split": "test",
+  "split_mode": "ood",
+  "spec_name": "ood_mbpp_hellaswag",
+  "n_test": 10469,
+  "families": [
+    "HellaSwag",
+    "MBPP"
+  ],
+  "rows": [
+    {
+      "method": "Smallest LLM",
+      "HellaSwag": 53.70444107055664,
+      "MBPP": 34.426231384277344,
+      "Avg": 44.06533622741699
+    },
+    {
+      "method": "Largest LLM",
+      "HellaSwag": 90.23103332519531,
+      "MBPP": 68.61827087402344,
+      "Avg": 79.42465209960938
+    },
+    {
+      "method": "Oracle",
+      "HellaSwag": 98.44652557373047,
+      "MBPP": 86.65105438232422,
+      "Avg": 92.54878997802734
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.00",
+      "HellaSwag": 90.23103332519531,
+      "MBPP": 68.61827087402344,
+      "Avg": 79.42465209960938
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.25",
+      "HellaSwag": 87.53236389160156,
+      "MBPP": 44.73067855834961,
+      "Avg": 66.13152122497559
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.50",
+      "HellaSwag": 87.53236389160156,
+      "MBPP": 43.55971908569336,
+      "Avg": 65.54604148864746
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.75",
+      "HellaSwag": 87.53236389160156,
+      "MBPP": 39.57845687866211,
+      "Avg": 63.555410385131836
+    },
+    {
+      "method": "BaRP (Ours)  w_c=1.00",
+      "HellaSwag": 53.70444107055664,
+      "MBPP": 34.426231384277344,
+      "Avg": 44.06533622741699
+    }
+  ]
+}

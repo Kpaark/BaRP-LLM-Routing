@@ -1,0 +1,21 @@
+{
+  "data_dir": "data_ood",
+  "out_dir": "runs/wandb_smoke",
+  "steps": 100,
+  "batch_size": 32,
+  "lr": 0.0003,
+  "beta": 0.01,
+  "tau": null,
+  "pref_hidden": 256,
+  "pref_out": 768,
+  "head_hidden": 256,
+  "val_every": 100,
+  "log_every": 50,
+  "seed": 42,
+  "device": "auto",
+  "wandb": false,
+  "wandb_project": "barp-llm-routing",
+  "wandb_run_name": null,
+  "wandb_entity": null,
+  "resolved_tau": 0.008290000259876251
+}

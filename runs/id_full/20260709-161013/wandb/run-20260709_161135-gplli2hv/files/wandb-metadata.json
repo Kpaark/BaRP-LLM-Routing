@@ -1,0 +1,32 @@
+{
+  "os": "macOS-26.3.1-arm64-arm-64bit",
+  "python": "CPython 3.10.6",
+  "startedAt": "2026-07-09T23:11:35.618034Z",
+  "args": [
+    "--data-dir",
+    "data",
+    "--checkpoint",
+    "runs/id_full/20260709-161013/policy.pt",
+    "--wandb"
+  ],
+  "program": "-m barp.eval_table",
+  "git": {
+    "remote": "https://github.com/Kpaark/BaRP-LLM-Routing.git",
+    "commit": "7ff4db6e028a11f611de17c55d1e10db1bd2618a"
+  },
+  "email": "kbpark@andrew.cmu.edu",
+  "root": "runs/id_full/20260709-161013",
+  "host": "F5HJH9X0WGmac.local",
+  "executable": "/Users/kpark/S26-Research/BaRP_LLM_Routing/.venv/bin/python",
+  "disk": {
+    "/": {
+      "total": "494384795648",
+      "used": "328169222144"
+    }
+  },
+  "memory": {
+    "total": "17179869184"
+  },
+  "apple": {},
+  "writerId": "eqeyo41p2axkonrcwbwci9c0fb5v8cye"
+}

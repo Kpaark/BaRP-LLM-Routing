@@ -30,10 +30,6 @@ data*/*.pkl
 data*/*.parquet
 data*/*.csv
 data*/*.json
-runs/
-*.joblib
-*.pt
-*.ckpt
 
 # Environment / secrets
 .env

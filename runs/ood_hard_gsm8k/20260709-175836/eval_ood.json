@@ -1,0 +1,51 @@
+{
+  "split": "test",
+  "split_mode": "ood",
+  "spec_name": "ood_hard_gsm8k",
+  "n_test": 7450,
+  "families": [
+    "GSM8K"
+  ],
+  "rows": [
+    {
+      "method": "Smallest LLM",
+      "GSM8K": 41.15100860595703,
+      "Avg": 41.15100860595703
+    },
+    {
+      "method": "Largest LLM",
+      "GSM8K": 65.87919616699219,
+      "Avg": 65.87919616699219
+    },
+    {
+      "method": "Oracle",
+      "GSM8K": 74.9395980834961,
+      "Avg": 74.9395980834961
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.00",
+      "GSM8K": 54.81208038330078,
+      "Avg": 54.81208038330078
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.25",
+      "GSM8K": 54.80872344970703,
+      "Avg": 54.80872344970703
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.50",
+      "GSM8K": 54.80872344970703,
+      "Avg": 54.80872344970703
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.75",
+      "GSM8K": 50.64765167236328,
+      "Avg": 50.64765167236328
+    },
+    {
+      "method": "BaRP (Ours)  w_c=1.00",
+      "GSM8K": 41.15100860595703,
+      "Avg": 41.15100860595703
+    }
+  ]
+}

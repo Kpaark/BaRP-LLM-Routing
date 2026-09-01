@@ -1,0 +1,13 @@
+{
+  "data_dir": "data",
+  "out_dir": "runs/nopref",
+  "steps": 10000,
+  "batch_size": 256,
+  "lr": 0.0003,
+  "beta": 0.01,
+  "hidden_dim": 256,
+  "val_every": 500,
+  "log_every": 50,
+  "seed": 42,
+  "device": "auto"
+}

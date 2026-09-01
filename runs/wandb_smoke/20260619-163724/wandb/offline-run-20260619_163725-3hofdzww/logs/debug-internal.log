@@ -1,0 +1,16 @@
+{"time":"2026-06-19T16:37:26.805568-07:00","level":"INFO","msg":"wandb-core"}
+{"time":"2026-06-19T16:37:26.805734-07:00","level":"INFO","msg":"stream: starting","core version":"0.27.2"}
+{"time":"2026-06-19T16:37:31.895151-07:00","level":"ERROR","msg":"monitor: failed to initialize xpu resource: monitor: wandb-xpu binary failed to start: timeout reading portfile /var/folders/37/5vcdlty54n507gp8ct3zl96r0000gn/T/wandb-xpu-portfile-703455715"}
+{"time":"2026-06-19T16:37:31.895522-07:00","level":"WARN","msg":"featurechecker: GraphQL client is nil, skipping feature loading"}
+{"time":"2026-06-19T16:37:31.895545-07:00","level":"WARN","msg":"featurechecker: GraphQL client is nil, skipping feature loading"}
+{"time":"2026-06-19T16:37:31.89582-07:00","level":"INFO","msg":"stream: created new stream","id":"3hofdzww"}
+{"time":"2026-06-19T16:37:31.89606-07:00","level":"INFO","msg":"handler: started"}
+{"time":"2026-06-19T16:37:31.898847-07:00","level":"INFO","msg":"stream: started"}
+{"time":"2026-06-19T16:37:31.898875-07:00","level":"INFO","msg":"writer: started","stream_id":"3hofdzww"}
+{"time":"2026-06-19T16:37:31.899087-07:00","level":"INFO","msg":"sender: started"}
+{"time":"2026-06-19T16:37:32.186859-07:00","level":"WARN","msg":"featurechecker: GraphQL client is nil, skipping feature loading"}
+{"time":"2026-06-19T16:37:32.186902-07:00","level":"WARN","msg":"runupserter: server does not expand metric globs but the x_server_side_expand_glob_metrics setting is set; ignoring"}
+{"time":"2026-06-19T16:37:32.814196-07:00","level":"INFO","msg":"stream: finishing up"}
+{"time":"2026-06-19T16:37:32.814403-07:00","level":"INFO","msg":"handler: closed"}
+{"time":"2026-06-19T16:37:32.814549-07:00","level":"INFO","msg":"sender: closed"}
+{"time":"2026-06-19T16:37:32.814555-07:00","level":"INFO","msg":"stream: all finished"}

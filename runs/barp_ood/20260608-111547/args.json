@@ -1,0 +1,17 @@
+{
+  "data_dir": "data_ood",
+  "out_dir": "runs/barp_ood",
+  "steps": 80000,
+  "batch_size": 32,
+  "lr": 0.0001,
+  "beta": 0.05,
+  "tau": null,
+  "pref_hidden": 256,
+  "pref_out": 768,
+  "head_hidden": 256,
+  "val_every": 2000,
+  "log_every": 500,
+  "seed": 42,
+  "device": "auto",
+  "resolved_tau": 0.008290000259876251
+}

@@ -1,0 +1,55 @@
+{
+  "os": "macOS-26.3.1-arm64-arm-64bit",
+  "python": "CPython 3.10.6",
+  "startedAt": "2026-06-20T19:52:50.521835Z",
+  "args": [
+    "--data-dir",
+    "data_ood",
+    "--out-dir",
+    "runs/wandb_smoke3",
+    "--steps",
+    "100",
+    "--batch-size",
+    "32",
+    "--log-every",
+    "50",
+    "--val-every",
+    "100",
+    "--wandb",
+    "--wandb-project",
+    "barp-llm-routing",
+    "--wandb-run-name",
+    "smoke_test"
+  ],
+  "program": "-m barp.train",
+  "git": {
+    "remote": "https://github.com/Kpaark/BaRP-LLM-Routing.git",
+    "commit": "f09bca325154549bd0bd6597646055e7f602132d"
+  },
+  "email": "kbpark@andrew.cmu.edu",
+  "root": "runs/wandb_smoke3/20260620-125248",
+  "host": "F5HJH9X0WGmac.local",
+  "executable": "/Users/kpark/S26-Research/BaRP_LLM_Routing/.venv/bin/python",
+  "cpu_count": 8,
+  "cpu_count_logical": 8,
+  "disk": {
+    "/": {
+      "total": "494384795648",
+      "used": "315303890944"
+    }
+  },
+  "memory": {
+    "total": "17179869184"
+  },
+  "apple": {
+    "name": "Apple M1 Pro",
+    "ecpuCores": 2,
+    "pcpuCores": 6,
+    "gpuCores": 14,
+    "memoryGb": 16,
+    "swapTotalBytes": "10737418240",
+    "ramTotalBytes": "17179869184",
+    "macModel": "MacBookPro18,3"
+  },
+  "writerId": "xs34yeewgfpb7evxh8nmh5413khl43bb"
+}

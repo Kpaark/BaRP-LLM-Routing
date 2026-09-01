@@ -1,0 +1,178 @@
+{
+  "split": "test",
+  "n_eval": 5474,
+  "checkpoint": "runs/barp/20260606-132413/policy.pt",
+  "resolved_tau": 0.008070000447332859,
+  "barp_curve": [
+    {
+      "w_c": 0.0,
+      "mean_quality": 0.7872214317321777,
+      "mean_cost_usd": 0.0045113638043403625
+    },
+    {
+      "w_c": 0.05,
+      "mean_quality": 0.7768908143043518,
+      "mean_cost_usd": 0.003286175662651658
+    },
+    {
+      "w_c": 0.1,
+      "mean_quality": 0.7514157891273499,
+      "mean_cost_usd": 0.0015538553707301617
+    },
+    {
+      "w_c": 0.15000000000000002,
+      "mean_quality": 0.733284592628479,
+      "mean_cost_usd": 0.0007013033027760684
+    },
+    {
+      "w_c": 0.2,
+      "mean_quality": 0.7314121127128601,
+      "mean_cost_usd": 0.0005818296340294182
+    },
+    {
+      "w_c": 0.25,
+      "mean_quality": 0.7315491437911987,
+      "mean_cost_usd": 0.0005758549668826163
+    },
+    {
+      "w_c": 0.30000000000000004,
+      "mean_quality": 0.7333759665489197,
+      "mean_cost_usd": 0.0005728455143980682
+    },
+    {
+      "w_c": 0.35000000000000003,
+      "mean_quality": 0.7343076467514038,
+      "mean_cost_usd": 0.0005702371126972139
+    },
+    {
+      "w_c": 0.4,
+      "mean_quality": 0.7343533039093018,
+      "mean_cost_usd": 0.0005712248967029154
+    },
+    {
+      "w_c": 0.45,
+      "mean_quality": 0.7351114153862,
+      "mean_cost_usd": 0.0005718236789107323
+    },
+    {
+      "w_c": 0.5,
+      "mean_quality": 0.7371301054954529,
+      "mean_cost_usd": 0.0005887523293495178
+    },
+    {
+      "w_c": 0.55,
+      "mean_quality": 0.7367190718650818,
+      "mean_cost_usd": 0.0005879647214896977
+    },
+    {
+      "w_c": 0.6000000000000001,
+      "mean_quality": 0.7347643375396729,
+      "mean_cost_usd": 0.0005774118471890688
+    },
+    {
+      "w_c": 0.65,
+      "mean_quality": 0.7234837412834167,
+      "mean_cost_usd": 0.0005180332227610052
+    },
+    {
+      "w_c": 0.7000000000000001,
+      "mean_quality": 0.7123401761054993,
+      "mean_cost_usd": 0.0004907712573185563
+    },
+    {
+      "w_c": 0.75,
+      "mean_quality": 0.7081019282341003,
+      "mean_cost_usd": 0.00044109552982263267
+    },
+    {
+      "w_c": 0.8,
+      "mean_quality": 0.6953598856925964,
+      "mean_cost_usd": 0.00039761472726240754
+    },
+    {
+      "w_c": 0.8500000000000001,
+      "mean_quality": 0.6733741164207458,
+      "mean_cost_usd": 0.00035841288627125323
+    },
+    {
+      "w_c": 0.9,
+      "mean_quality": 0.5617372989654541,
+      "mean_cost_usd": 0.00018184160580858588
+    },
+    {
+      "w_c": 0.9500000000000001,
+      "mean_quality": 0.5327365398406982,
+      "mean_cost_usd": 0.00014361896319314837
+    },
+    {
+      "w_c": 1.0,
+      "mean_quality": 0.5297223329544067,
+      "mean_cost_usd": 0.00014129828196018934
+    }
+  ],
+  "single_models": [
+    {
+      "model": "WizardLM/WizardLM-13B-V1.2",
+      "mean_quality": 0.5312659740447998,
+      "mean_cost_usd": 0.00014106374874245375
+    },
+    {
+      "model": "claude-instant-v1",
+      "mean_quality": 0.5911033749580383,
+      "mean_cost_usd": 0.0012298645451664925
+    },
+    {
+      "model": "claude-v1",
+      "mean_quality": 0.6434234976768494,
+      "mean_cost_usd": 0.00584140419960022
+    },
+    {
+      "model": "claude-v2",
+      "mean_quality": 0.5060833096504211,
+      "mean_cost_usd": 0.006122753489762545
+    },
+    {
+      "model": "gpt-3.5-turbo-1106",
+      "mean_quality": 0.6833668351173401,
+      "mean_cost_usd": 0.0007054723682813346
+    },
+    {
+      "model": "gpt-4-1106-preview",
+      "mean_quality": 0.7999634742736816,
+      "mean_cost_usd": 0.007914010435342789
+    },
+    {
+      "model": "meta/code-llama-instruct-34b-chat",
+      "mean_quality": 0.49559736251831055,
+      "mean_cost_usd": 0.000547400675714016
+    },
+    {
+      "model": "meta/llama-2-70b-chat",
+      "mean_quality": 0.5975155234336853,
+      "mean_cost_usd": 0.0013314399402588606
+    },
+    {
+      "model": "mistralai/mistral-7b-chat",
+      "mean_quality": 0.49263790249824524,
+      "mean_cost_usd": 0.00013798274449072778
+    },
+    {
+      "model": "mistralai/mixtral-8x7b-chat",
+      "mean_quality": 0.6377968788146973,
+      "mean_cost_usd": 0.00041187371243722737
+    },
+    {
+      "model": "zero-one-ai/Yi-34B-Chat",
+      "mean_quality": 0.7135458588600159,
+      "mean_cost_usd": 0.0005556745454668999
+    }
+  ],
+  "oracle": {
+    "mean_quality": 0.9157289266586304,
+    "mean_cost_usd": 0.0014798800693824887
+  },
+  "random": {
+    "mean_quality": 0.6029594540596008,
+    "mean_cost_usd": 0.0022354836110025644
+  }
+}

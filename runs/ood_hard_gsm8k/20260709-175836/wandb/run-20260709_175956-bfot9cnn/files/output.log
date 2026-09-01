@@ -1,0 +1,18 @@
+wandb resumed: barp-llm-routing/ood_hard_gsm8k-seed42  id=bfot9cnn
+
+OOD evaluation  [spec: ood_hard_gsm8k]  split = test  (N = 7,450)
+test families: ['GSM8K']
+checkpoint: runs/ood_hard_gsm8k/20260709-175836/policy.pt
+
+Method                             GSM8K           Avg
+------------------------------------------------------
+Smallest LLM                       41.15         41.15
+Largest LLM                        65.88         65.88
+Oracle                             74.94         74.94
+BaRP (Ours)  w_c=0.00              54.81         54.81
+BaRP (Ours)  w_c=0.25              54.81         54.81
+BaRP (Ours)  w_c=0.50              54.81         54.81
+BaRP (Ours)  w_c=0.75              50.65         50.65
+BaRP (Ours)  w_c=1.00              41.15         41.15
+
+Wrote runs/ood_hard_gsm8k/20260709-175836/eval_ood.json

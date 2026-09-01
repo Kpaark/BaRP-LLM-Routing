@@ -1,0 +1,97 @@
+[
+  {
+    "router": "random",
+    "mean_quality": 0.6029594540596008,
+    "mean_cost_usd": 0.0022354836110025644,
+    "top_action": "WizardLM/WizardLM-13B-V1.2",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 9.8,
+      "claude-instant-v1": 8.8,
+      "claude-v1": 8.4,
+      "claude-v2": 9.2,
+      "gpt-3.5-turbo-1106": 9.2,
+      "gpt-4-1106-preview": 9.1,
+      "meta/code-llama-instruct-34b-chat": 9.3,
+      "meta/llama-2-70b-chat": 9.0,
+      "mistralai/mistral-7b-chat": 8.5,
+      "mistralai/mixtral-8x7b-chat": 9.4,
+      "zero-one-ai/Yi-34B-Chat": 9.4
+    }
+  },
+  {
+    "router": "cheapest (mistralai/mistral-7b-chat)",
+    "mean_quality": 0.49263790249824524,
+    "mean_cost_usd": 0.00013798274449072778,
+    "top_action": "mistralai/mistral-7b-chat",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 0.0,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.0,
+      "gpt-3.5-turbo-1106": 0.0,
+      "gpt-4-1106-preview": 0.0,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 100.0,
+      "mistralai/mixtral-8x7b-chat": 0.0,
+      "zero-one-ai/Yi-34B-Chat": 0.0
+    }
+  },
+  {
+    "router": "best-single (gpt-4-1106-preview)",
+    "mean_quality": 0.7999634742736816,
+    "mean_cost_usd": 0.007914010435342789,
+    "top_action": "gpt-4-1106-preview",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 0.0,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.0,
+      "gpt-3.5-turbo-1106": 0.0,
+      "gpt-4-1106-preview": 100.0,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 0.0,
+      "mistralai/mixtral-8x7b-chat": 0.0,
+      "zero-one-ai/Yi-34B-Chat": 0.0
+    }
+  },
+  {
+    "router": "BaRPNoPref (this)",
+    "mean_quality": 0.8008768558502197,
+    "mean_cost_usd": 0.007891330868005753,
+    "top_action": "gpt-4-1106-preview",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 0.0,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.9,
+      "gpt-3.5-turbo-1106": 0.0,
+      "gpt-4-1106-preview": 98.3,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 0.0,
+      "mistralai/mixtral-8x7b-chat": 0.8,
+      "zero-one-ai/Yi-34B-Chat": 0.0
+    }
+  },
+  {
+    "router": "oracle (per-prompt argmax q)",
+    "mean_quality": 0.9157289266586304,
+    "mean_cost_usd": 0.0014798800693824887,
+    "top_action": "WizardLM/WizardLM-13B-V1.2",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 54.5,
+      "claude-instant-v1": 24.0,
+      "claude-v1": 9.0,
+      "claude-v2": 4.1,
+      "gpt-3.5-turbo-1106": 2.6,
+      "gpt-4-1106-preview": 3.3,
+      "meta/code-llama-instruct-34b-chat": 0.5,
+      "meta/llama-2-70b-chat": 0.4,
+      "mistralai/mistral-7b-chat": 0.5,
+      "mistralai/mixtral-8x7b-chat": 0.5,
+      "zero-one-ai/Yi-34B-Chat": 0.5
+    }
+  }
+]

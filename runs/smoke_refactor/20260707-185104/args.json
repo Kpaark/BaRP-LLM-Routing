@@ -1,0 +1,29 @@
+{
+  "data_dir": "data",
+  "out_dir": "runs/smoke_refactor",
+  "steps": 300,
+  "batch_size": 256,
+  "lr": 0.0003,
+  "beta": 0.01,
+  "tau": null,
+  "pref_hidden": 256,
+  "pref_out": 768,
+  "head_hidden": 256,
+  "val_every": 150,
+  "log_every": 100,
+  "seed": 42,
+  "device": "auto",
+  "wandb": false,
+  "wandb_project": "barp-llm-routing",
+  "wandb_run_name": null,
+  "wandb_entity": null,
+  "resolved_tau": 0.008070000447332859,
+  "split_spec": {
+    "name": "id_full",
+    "train_families": "all",
+    "test_families": "all",
+    "val_frac": 0.15,
+    "test_frac": 0.15,
+    "seed": 42
+  }
+}

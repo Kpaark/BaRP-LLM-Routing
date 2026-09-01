@@ -1,0 +1,18 @@
+wandb resumed: barp-llm-routing/ood_mbpp_hellaswag-seed42  id=7x0rf1a2
+
+OOD evaluation  [spec: ood_mbpp_hellaswag]  split = test  (N = 10,469)
+test families: ['HellaSwag', 'MBPP']
+checkpoint: runs/ood/20260709-113603/policy.pt
+
+Method                         HellaSwag          MBPP           Avg
+--------------------------------------------------------------------
+Smallest LLM                       53.70         34.43         44.07
+Largest LLM                        90.23         68.62         79.42
+Oracle                             98.45         86.65         92.55
+BaRP (Ours)  w_c=0.00              90.23         68.62         79.42
+BaRP (Ours)  w_c=0.25              87.53         44.73         66.13
+BaRP (Ours)  w_c=0.50              87.53         43.56         65.55
+BaRP (Ours)  w_c=0.75              87.53         39.58         63.56
+BaRP (Ours)  w_c=1.00              53.70         34.43         44.07
+
+Wrote runs/ood/20260709-113603/eval_ood.json

@@ -1,0 +1,66 @@
+{
+  "split": "test",
+  "split_mode": "in_distribution",
+  "spec_name": "id_full",
+  "n_test": 5474,
+  "families": [
+    "ARC-Challenge",
+    "GSM8K",
+    "HellaSwag",
+    "MBPP",
+    "MMLU",
+    "MT-Bench",
+    "RAG",
+    "Winogrande"
+  ],
+  "rows": [
+    {
+      "method": "Smallest LLM",
+      "ARC-Challenge": 65.0,
+      "GSM8K": 41.905189514160156,
+      "HellaSwag": 52.98804473876953,
+      "MBPP": 35.9375,
+      "MMLU": 50.189937591552734,
+      "MT-Bench": 43.333335876464844,
+      "RAG": 35.658912658691406,
+      "Winogrande": 57.894737243652344,
+      "Avg": 47.86345720291138
+    },
+    {
+      "method": "Largest LLM",
+      "ARC-Challenge": 95.0,
+      "GSM8K": 65.6529541015625,
+      "HellaSwag": 90.9030532836914,
+      "MBPP": 59.375,
+      "MMLU": 82.05128479003906,
+      "MT-Bench": 79.16667175292969,
+      "RAG": 53.29457473754883,
+      "Winogrande": 81.05262756347656,
+      "Avg": 75.812020778656
+    },
+    {
+      "method": "Oracle",
+      "ARC-Challenge": 99.54545593261719,
+      "GSM8K": 75.15652465820312,
+      "HellaSwag": 98.4063720703125,
+      "MBPP": 79.6875,
+      "MMLU": 95.77397918701172,
+      "MT-Bench": 89.16666412353516,
+      "RAG": 78.58527374267578,
+      "Winogrande": 100.0,
+      "Avg": 89.54022121429443
+    },
+    {
+      "method": "BaRP (Ours)  w_c=0.50",
+      "ARC-Challenge": 89.09090423583984,
+      "GSM8K": 53.93560028076172,
+      "HellaSwag": 87.84860229492188,
+      "MBPP": 34.375,
+      "MMLU": 71.98480224609375,
+      "MT-Bench": 55.83333206176758,
+      "RAG": 36.531005859375,
+      "Winogrande": 76.31578826904297,
+      "Avg": 63.23937940597534
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+_wandb:
+    value:
+        cli_version: 0.27.2
+        e:
+            ut31gvw8alo5a4zsbwtps5pva0s0tqmv:
+                apple: {}
+                args:
+                    - --data-dir
+                    - data_ood_hard
+                    - --out-dir
+                    - runs/ood_hard_gsm8k
+                    - --wandb
+                disk:
+                    /:
+                        total: "494384795648"
+                        used: "329434947584"
+                email: kbpark@andrew.cmu.edu
+                executable: /Users/kpark/S26-Research/BaRP_LLM_Routing/.venv/bin/python
+                git:
+                    commit: 7ff4db6e028a11f611de17c55d1e10db1bd2618a
+                    remote: https://github.com/Kpaark/BaRP-LLM-Routing.git
+                host: F5HJH9X0WGmac.local
+                memory:
+                    total: "17179869184"
+                os: macOS-26.3.1-arm64-arm-64bit
+                program: -m barp.train
+                python: CPython 3.10.6
+                root: runs/ood_hard_gsm8k/20260709-175836
+                startedAt: "2026-07-10T00:58:38.238372Z"
+                writerId: ut31gvw8alo5a4zsbwtps5pva0s0tqmv
+        m: []
+        python_version: 3.10.6
+        t:
+            "1":
+                - 1
+            "2":
+                - 1
+            "3":
+                - 2
+                - 13
+                - 15
+                - 16
+                - 19
+                - 61
+            "4": 3.10.6
+            "5": 0.27.2
+            "12": 0.27.2
+            "13": darwin-arm64
+batch_size:
+    value: 256
+beta:
+    value: 0.01
+data_dir:
+    value: data_ood_hard
+device:
+    value: auto
+head_hidden:
+    value: 256
+log_every:
+    value: 50
+lr:
+    value: 0.0003
+ood_families:
+    value:
+        - GSM8K
+out_dir:
+    value: runs/ood_hard_gsm8k
+pref_hidden:
+    value: 256
+pref_out:
+    value: 768
+resolved_tau:
+    value: 0.008050000295042992
+seed:
+    value: 42
+split/test/GSM8K/count:
+    value: 7450
+split/test/GSM8K/fraction:
+    value: 1
+split/train/ARC-Challenge/count:
+    value: 1250
+split/train/ARC-Challenge/fraction:
+    value: 0.0506
+split/train/HellaSwag/count:
+    value: 8536
+split/train/HellaSwag/fraction:
+    value: 0.3457
+split/train/MBPP/count:
+    value: 363
+split/train/MBPP/fraction:
+    value: 0.0147
+split/train/MMLU/count:
+    value: 11936
+split/train/MMLU/fraction:
+    value: 0.4834
+split/train/MT-Bench/count:
+    value: 68
+split/train/MT-Bench/fraction:
+    value: 0.0028
+split/train/RAG/count:
+    value: 1461
+split/train/RAG/fraction:
+    value: 0.0592
+split/train/Winogrande/count:
+    value: 1077
+split/train/Winogrande/fraction:
+    value: 0.0436
+split/val/ARC-Challenge/count:
+    value: 220
+split/val/ARC-Challenge/fraction:
+    value: 0.0505
+split/val/HellaSwag/count:
+    value: 1506
+split/val/HellaSwag/fraction:
+    value: 0.3457
+split/val/MBPP/count:
+    value: 64
+split/val/MBPP/fraction:
+    value: 0.0147
+split/val/MMLU/count:
+    value: 2106
+split/val/MMLU/fraction:
+    value: 0.4835
+split/val/MT-Bench/count:
+    value: 12
+split/val/MT-Bench/fraction:
+    value: 0.0028
+split/val/RAG/count:
+    value: 258
+split/val/RAG/fraction:
+    value: 0.0592
+split/val/Winogrande/count:
+    value: 190
+split/val/Winogrande/fraction:
+    value: 0.0436
+split_mode:
+    value: ood
+split_spec:
+    value:
+        name: ood_hard_gsm8k
+        seed: 42
+        test_families:
+            - GSM8K
+        test_frac: 0
+        train_families: rest
+        val_frac: 0.15
+steps:
+    value: 10000
+tau:
+    value: null
+test_families:
+    value:
+        - GSM8K
+train_families:
+    value:
+        - ARC-Challenge
+        - HellaSwag
+        - MBPP
+        - MMLU
+        - MT-Bench
+        - RAG
+        - Winogrande
+val_every:
+    value: 500
+val_families:
+    value:
+        - ARC-Challenge
+        - HellaSwag
+        - MBPP
+        - MMLU
+        - MT-Bench
+        - RAG
+        - Winogrande
+wandb:
+    value: true
+wandb_entity:
+    value: null
+wandb_group:
+    value: null
+wandb_project:
+    value: barp-llm-routing
+wandb_run_name:
+    value: null
+wandb_tags:
+    value: null

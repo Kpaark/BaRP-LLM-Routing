@@ -1,0 +1,5 @@
+wandb run: barp-llm-routing/smoke_test  id=uk2r6ebz
+step      1  loss=-0.0321  r=+0.1667  q=0.6484  c=$0.0014  w_q=0.42  H(pi)=2.395
+step     50  loss=+0.0001  r=+0.3467  q=0.6406  c=$0.0004  w_q=0.57  H(pi)=1.391
+step    100  loss=-0.0388  r=+0.3190  q=0.7031  c=$0.0004  w_q=0.49  H(pi)=1.646
+  [val @ w=(0.5, 0.5)] quality=0.6335  cost=$0.0004  action_H=-0.00 bits

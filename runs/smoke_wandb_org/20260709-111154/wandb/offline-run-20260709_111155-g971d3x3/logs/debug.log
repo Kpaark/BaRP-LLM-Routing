@@ -1,0 +1,120 @@
+2026-07-09 11:11:55,675 INFO    MainThread:51600 [wandb_setup.py:_flush():81] Current SDK version is 0.27.2
+2026-07-09 11:11:55,675 INFO    MainThread:51600 [wandb_setup.py:_flush():81] Configure stats pid to 51600
+2026-07-09 11:11:55,675 INFO    MainThread:51600 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-07-09 11:11:55,676 INFO    MainThread:51600 [wandb_init.py:setup_run_log_directory():723] Logging user logs to runs/smoke_wandb_org/20260709-111154/wandb/offline-run-20260709_111155-g971d3x3/logs/debug.log
+2026-07-09 11:11:55,676 INFO    MainThread:51600 [wandb_init.py:setup_run_log_directory():724] Logging internal logs to runs/smoke_wandb_org/20260709-111154/wandb/offline-run-20260709_111155-g971d3x3/logs/debug-internal.log
+2026-07-09 11:11:55,677 INFO    MainThread:51600 [wandb_init.py:init():766] calling init triggers
+2026-07-09 11:11:55,677 INFO    MainThread:51600 [wandb_init.py:init():771] wandb.init called with sweep_config: {}
+config: {'data_dir': PosixPath('data'), 'out_dir': PosixPath('runs/smoke_wandb_org'), 'steps': 60, 'batch_size': 256, 'lr': 0.0003, 'beta': 0.01, 'tau': None, 'pref_hidden': 256, 'pref_out': 768, 'head_hidden': 256, 'val_every': 30, 'log_every': 30, 'seed': 42, 'device': 'auto', 'wandb': True, 'wandb_project': 'barp-llm-routing', 'wandb_run_name': None, 'wandb_entity': None, 'wandb_group': None, 'wandb_tags': None, 'resolved_tau': 0.008070000447332859, 'split_mode': 'in_distribution', 'split_spec': {'name': 'id_full', 'train_families': 'all', 'test_families': 'all', 'val_frac': 0.15, 'test_frac': 0.15, 'seed': 42}, '_wandb': {}}
+2026-07-09 11:11:55,677 INFO    MainThread:51600 [wandb_init.py:init():814] starting backend
+2026-07-09 11:11:55,959 INFO    MainThread:51600 [wandb_init.py:init():829] sending inform_init request
+2026-07-09 11:12:01,139 INFO    MainThread:51600 [wandb_init.py:init():834] backend started and connected
+2026-07-09 11:12:01,181 INFO    MainThread:51600 [wandb_init.py:init():904] updated telemetry
+2026-07-09 11:12:01,224 INFO    MainThread:51600 [wandb_init.py:init():927] communicating run to backend with 90.0 second timeout
+2026-07-09 11:12:01,230 INFO    MainThread:51600 [wandb_init.py:init():972] starting run threads in backend
+2026-07-09 11:12:01,324 INFO    MainThread:51600 [wandb_run.py:_console_start():2523] atexit reg
+2026-07-09 11:12:01,325 INFO    MainThread:51600 [wandb_run.py:_redirect():2373] redirect: wrap_raw
+2026-07-09 11:12:01,325 INFO    MainThread:51600 [wandb_run.py:_redirect():2442] Wrapping output streams.
+2026-07-09 11:12:01,325 INFO    MainThread:51600 [wandb_run.py:_redirect():2465] Redirects installed.
+2026-07-09 11:12:01,327 INFO    MainThread:51600 [wandb_init.py:init():1010] run started, returning control to user process
+2026-07-09 11:12:01,858 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb None None {'split_mode': 'in_distribution', 'split_spec': {'name': 'id_full', 'train_families': 'all', 'test_families': 'all', 'val_frac': 0.15, 'test_frac': 0.15, 'seed': 42}, 'ood_families': None, 'train_families': ['ARC-Challenge', 'GSM8K', 'HellaSwag', 'MBPP', 'MMLU', 'MT-Bench', 'RAG', 'Winogrande'], 'val_families': ['ARC-Challenge', 'GSM8K', 'HellaSwag', 'MBPP', 'MMLU', 'MT-Bench', 'RAG', 'Winogrande'], 'test_families': ['ARC-Challenge', 'GSM8K', 'HellaSwag', 'MBPP', 'MMLU', 'MT-Bench', 'RAG', 'Winogrande']}
+2026-07-09 11:12:01,859 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/ARC-Challenge/count = 1030 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,859 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/ARC-Challenge/count 1030 None
+2026-07-09 11:12:01,859 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/ARC-Challenge/fraction = 0.0403 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,860 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/ARC-Challenge/fraction 0.0403 None
+2026-07-09 11:12:01,860 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/GSM8K/count = 5214 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,860 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/GSM8K/count 5214 None
+2026-07-09 11:12:01,861 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/GSM8K/fraction = 0.2041 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,861 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/GSM8K/fraction 0.2041 None
+2026-07-09 11:12:01,861 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/HellaSwag/count = 7030 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,861 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/HellaSwag/count 7030 None
+2026-07-09 11:12:01,862 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/HellaSwag/fraction = 0.2752 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,862 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/HellaSwag/fraction 0.2752 None
+2026-07-09 11:12:01,862 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/MBPP/count = 299 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,862 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/MBPP/count 299 None
+2026-07-09 11:12:01,863 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/MBPP/fraction = 0.0117 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,863 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/MBPP/fraction 0.0117 None
+2026-07-09 11:12:01,863 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/MMLU/count = 9830 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,864 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/MMLU/count 9830 None
+2026-07-09 11:12:01,864 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/MMLU/fraction = 0.3848 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,864 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/MMLU/fraction 0.3848 None
+2026-07-09 11:12:01,864 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/MT-Bench/count = 56 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,865 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/MT-Bench/count 56 None
+2026-07-09 11:12:01,865 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/MT-Bench/fraction = 0.0022 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,865 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/MT-Bench/fraction 0.0022 None
+2026-07-09 11:12:01,866 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/RAG/count = 1203 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,866 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/RAG/count 1203 None
+2026-07-09 11:12:01,866 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/RAG/fraction = 0.0471 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,866 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/RAG/fraction 0.0471 None
+2026-07-09 11:12:01,867 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/Winogrande/count = 887 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,867 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/Winogrande/count 887 None
+2026-07-09 11:12:01,867 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/train/Winogrande/fraction = 0.0347 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,867 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/train/Winogrande/fraction 0.0347 None
+2026-07-09 11:12:01,868 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/ARC-Challenge/count = 220 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,868 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/ARC-Challenge/count 220 None
+2026-07-09 11:12:01,868 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/ARC-Challenge/fraction = 0.0402 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,868 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/ARC-Challenge/fraction 0.0402 None
+2026-07-09 11:12:01,869 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/GSM8K/count = 1118 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,869 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/GSM8K/count 1118 None
+2026-07-09 11:12:01,869 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/GSM8K/fraction = 0.2042 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,869 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/GSM8K/fraction 0.2042 None
+2026-07-09 11:12:01,870 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/HellaSwag/count = 1506 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,870 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/HellaSwag/count 1506 None
+2026-07-09 11:12:01,870 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/HellaSwag/fraction = 0.2751 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,870 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/HellaSwag/fraction 0.2751 None
+2026-07-09 11:12:01,871 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/MBPP/count = 64 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,871 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/MBPP/count 64 None
+2026-07-09 11:12:01,871 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/MBPP/fraction = 0.0117 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,871 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/MBPP/fraction 0.0117 None
+2026-07-09 11:12:01,872 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/MMLU/count = 2106 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,872 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/MMLU/count 2106 None
+2026-07-09 11:12:01,872 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/MMLU/fraction = 0.3847 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,872 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/MMLU/fraction 0.3847 None
+2026-07-09 11:12:01,873 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/MT-Bench/count = 12 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,873 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/MT-Bench/count 12 None
+2026-07-09 11:12:01,873 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/MT-Bench/fraction = 0.0022 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,874 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/MT-Bench/fraction 0.0022 None
+2026-07-09 11:12:01,874 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/RAG/count = 258 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,874 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/RAG/count 258 None
+2026-07-09 11:12:01,875 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/RAG/fraction = 0.0471 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,875 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/RAG/fraction 0.0471 None
+2026-07-09 11:12:01,875 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/Winogrande/count = 190 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,876 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/Winogrande/count 190 None
+2026-07-09 11:12:01,876 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/val/Winogrande/fraction = 0.0347 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,876 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/val/Winogrande/fraction 0.0347 None
+2026-07-09 11:12:01,877 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/ARC-Challenge/count = 220 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,877 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/ARC-Challenge/count 220 None
+2026-07-09 11:12:01,877 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/ARC-Challenge/fraction = 0.0402 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,878 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/ARC-Challenge/fraction 0.0402 None
+2026-07-09 11:12:01,878 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/GSM8K/count = 1118 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,878 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/GSM8K/count 1118 None
+2026-07-09 11:12:01,878 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/GSM8K/fraction = 0.2042 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,879 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/GSM8K/fraction 0.2042 None
+2026-07-09 11:12:01,879 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/HellaSwag/count = 1506 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,879 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/HellaSwag/count 1506 None
+2026-07-09 11:12:01,879 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/HellaSwag/fraction = 0.2751 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,880 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/HellaSwag/fraction 0.2751 None
+2026-07-09 11:12:01,880 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/MBPP/count = 64 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,880 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/MBPP/count 64 None
+2026-07-09 11:12:01,881 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/MBPP/fraction = 0.0117 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,881 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/MBPP/fraction 0.0117 None
+2026-07-09 11:12:01,881 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/MMLU/count = 2106 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,881 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/MMLU/count 2106 None
+2026-07-09 11:12:01,881 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/MMLU/fraction = 0.3847 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,882 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/MMLU/fraction 0.3847 None
+2026-07-09 11:12:01,882 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/MT-Bench/count = 12 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,882 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/MT-Bench/count 12 None
+2026-07-09 11:12:01,882 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/MT-Bench/fraction = 0.0022 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,883 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/MT-Bench/fraction 0.0022 None
+2026-07-09 11:12:01,883 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/RAG/count = 258 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,883 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/RAG/count 258 None
+2026-07-09 11:12:01,883 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/RAG/fraction = 0.0471 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,884 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/RAG/fraction 0.0471 None
+2026-07-09 11:12:01,884 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/Winogrande/count = 190 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,884 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/Winogrande/count 190 None
+2026-07-09 11:12:01,884 INFO    MainThread:51600 [wandb_config.py:__setitem__():155] [no run ID] config set split/test/Winogrande/fraction = 0.0347 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x1329cb6a0>>
+2026-07-09 11:12:01,885 INFO    MainThread:51600 [wandb_run.py:_config_callback():1346] config_cb split/test/Winogrande/fraction 0.0347 None
+2026-07-09 11:12:02,987 INFO    MainThread:51600 [wandb_run.py:_finish():2285] finishing run barp-llm-routing/g971d3x3
+2026-07-09 11:12:02,988 INFO    MainThread:51600 [wandb_run.py:_atexit_cleanup():2490] got exitcode: 0
+2026-07-09 11:12:02,988 INFO    MainThread:51600 [wandb_run.py:_restore():2472] restore
+2026-07-09 11:12:02,988 INFO    MainThread:51600 [wandb_run.py:_restore():2478] restore done

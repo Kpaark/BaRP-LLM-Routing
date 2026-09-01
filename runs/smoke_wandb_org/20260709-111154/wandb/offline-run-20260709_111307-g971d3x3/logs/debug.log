@@ -1,0 +1,23 @@
+2026-07-09 11:13:07,441 INFO    MainThread:51741 [wandb_setup.py:_flush():81] Current SDK version is 0.27.2
+2026-07-09 11:13:07,441 INFO    MainThread:51741 [wandb_setup.py:_flush():81] Configure stats pid to 51741
+2026-07-09 11:13:07,442 INFO    MainThread:51741 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-07-09 11:13:07,442 INFO    MainThread:51741 [wandb_init.py:setup_run_log_directory():723] Logging user logs to runs/smoke_wandb_org/20260709-111154/wandb/offline-run-20260709_111307-g971d3x3/logs/debug.log
+2026-07-09 11:13:07,443 INFO    MainThread:51741 [wandb_init.py:setup_run_log_directory():724] Logging internal logs to runs/smoke_wandb_org/20260709-111154/wandb/offline-run-20260709_111307-g971d3x3/logs/debug-internal.log
+2026-07-09 11:13:07,443 INFO    MainThread:51741 [wandb_init.py:init():766] calling init triggers
+2026-07-09 11:13:07,443 INFO    MainThread:51741 [wandb_init.py:init():771] wandb.init called with sweep_config: {}
+config: {'eval_split': 'test', 'eval_split_mode': 'in_distribution', 'eval_spec_name': 'id_full', 'checkpoint': 'runs/smoke_wandb_org/20260709-111154/policy.pt', 'data_dir': 'data', 'w_c_sweep': [0.5], '_wandb': {}}
+2026-07-09 11:13:07,444 INFO    MainThread:51741 [wandb_init.py:init():814] starting backend
+2026-07-09 11:13:07,714 INFO    MainThread:51741 [wandb_init.py:init():829] sending inform_init request
+2026-07-09 11:13:12,840 INFO    MainThread:51741 [wandb_init.py:init():834] backend started and connected
+2026-07-09 11:13:12,862 INFO    MainThread:51741 [wandb_init.py:init():904] updated telemetry
+2026-07-09 11:13:12,890 INFO    MainThread:51741 [wandb_init.py:init():927] communicating run to backend with 90.0 second timeout
+2026-07-09 11:13:12,897 INFO    MainThread:51741 [wandb_init.py:init():972] starting run threads in backend
+2026-07-09 11:13:12,995 INFO    MainThread:51741 [wandb_run.py:_console_start():2523] atexit reg
+2026-07-09 11:13:12,995 INFO    MainThread:51741 [wandb_run.py:_redirect():2373] redirect: wrap_raw
+2026-07-09 11:13:12,996 INFO    MainThread:51741 [wandb_run.py:_redirect():2442] Wrapping output streams.
+2026-07-09 11:13:12,996 INFO    MainThread:51741 [wandb_run.py:_redirect():2465] Redirects installed.
+2026-07-09 11:13:12,997 INFO    MainThread:51741 [wandb_init.py:init():1010] run started, returning control to user process
+2026-07-09 11:13:13,541 INFO    MainThread:51741 [wandb_run.py:_finish():2285] finishing run barp-llm-routing/g971d3x3
+2026-07-09 11:13:13,542 INFO    MainThread:51741 [wandb_run.py:_atexit_cleanup():2490] got exitcode: 0
+2026-07-09 11:13:13,542 INFO    MainThread:51741 [wandb_run.py:_restore():2472] restore
+2026-07-09 11:13:13,542 INFO    MainThread:51741 [wandb_run.py:_restore():2478] restore done

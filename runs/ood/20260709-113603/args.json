@@ -1,0 +1,35 @@
+{
+  "data_dir": "data_ood",
+  "out_dir": "runs/ood",
+  "steps": 10000,
+  "batch_size": 256,
+  "lr": 0.0003,
+  "beta": 0.01,
+  "tau": null,
+  "pref_hidden": 256,
+  "pref_out": 768,
+  "head_hidden": 256,
+  "val_every": 500,
+  "log_every": 50,
+  "seed": 42,
+  "device": "auto",
+  "wandb": true,
+  "wandb_project": "barp-llm-routing",
+  "wandb_run_name": null,
+  "wandb_entity": null,
+  "wandb_group": null,
+  "wandb_tags": null,
+  "resolved_tau": 0.008290000259876251,
+  "split_mode": "ood",
+  "split_spec": {
+    "name": "ood_mbpp_hellaswag",
+    "train_families": "rest",
+    "test_families": [
+      "MBPP",
+      "HellaSwag"
+    ],
+    "val_frac": 0.15,
+    "test_frac": 0.0,
+    "seed": 42
+  }
+}

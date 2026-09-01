@@ -1,0 +1,34 @@
+{
+  "data_dir": "data_ood_hard",
+  "out_dir": "runs/ood_hard_gsm8k_small",
+  "steps": 10000,
+  "batch_size": 256,
+  "lr": 0.0003,
+  "beta": 0.01,
+  "tau": null,
+  "pref_hidden": 64,
+  "pref_out": 128,
+  "head_hidden": 64,
+  "val_every": 500,
+  "log_every": 50,
+  "seed": 42,
+  "device": "auto",
+  "wandb": false,
+  "wandb_project": "barp-llm-routing",
+  "wandb_run_name": null,
+  "wandb_entity": null,
+  "wandb_group": null,
+  "wandb_tags": null,
+  "resolved_tau": 0.008050000295042992,
+  "split_mode": "ood",
+  "split_spec": {
+    "name": "ood_hard_gsm8k",
+    "train_families": "rest",
+    "test_families": [
+      "GSM8K"
+    ],
+    "val_frac": 0.15,
+    "test_frac": 0.0,
+    "seed": 42
+  }
+}

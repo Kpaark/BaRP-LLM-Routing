@@ -1,0 +1,122 @@
+[
+  {
+    "w_c": 0.0,
+    "w_q": 1.0,
+    "mean_quality": 0.7355772852897644,
+    "mean_cost_usd": 0.0005874037742614746,
+    "top_action": "zero-one-ai/Yi-34B-Chat",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 0.0,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.0,
+      "gpt-3.5-turbo-1106": 25.2,
+      "gpt-4-1106-preview": 0.0,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 0.0,
+      "mistralai/mixtral-8x7b-chat": 0.6,
+      "zero-one-ai/Yi-34B-Chat": 74.2
+    }
+  },
+  {
+    "w_c": 0.2,
+    "w_q": 0.8,
+    "mean_quality": 0.7361253499984741,
+    "mean_cost_usd": 0.0005854818155057728,
+    "top_action": "zero-one-ai/Yi-34B-Chat",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 0.0,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.0,
+      "gpt-3.5-turbo-1106": 23.8,
+      "gpt-4-1106-preview": 0.0,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 0.0,
+      "mistralai/mixtral-8x7b-chat": 1.0,
+      "zero-one-ai/Yi-34B-Chat": 75.2
+    }
+  },
+  {
+    "w_c": 0.4,
+    "w_q": 0.6,
+    "mean_quality": 0.7351844906806946,
+    "mean_cost_usd": 0.0005807372508570552,
+    "top_action": "zero-one-ai/Yi-34B-Chat",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 0.0,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.0,
+      "gpt-3.5-turbo-1106": 23.6,
+      "gpt-4-1106-preview": 0.0,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 0.0,
+      "mistralai/mixtral-8x7b-chat": 2.8,
+      "zero-one-ai/Yi-34B-Chat": 73.7
+    }
+  },
+  {
+    "w_c": 0.6,
+    "w_q": 0.4,
+    "mean_quality": 0.7326726317405701,
+    "mean_cost_usd": 0.0005551106296479702,
+    "top_action": "zero-one-ai/Yi-34B-Chat",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 0.0,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.0,
+      "gpt-3.5-turbo-1106": 23.5,
+      "gpt-4-1106-preview": 0.0,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 0.0,
+      "mistralai/mixtral-8x7b-chat": 12.5,
+      "zero-one-ai/Yi-34B-Chat": 64.1
+    }
+  },
+  {
+    "w_c": 0.8,
+    "w_q": 0.19999999999999996,
+    "mean_quality": 0.6314212679862976,
+    "mean_cost_usd": 0.0002936226374004036,
+    "top_action": "WizardLM/WizardLM-13B-V1.2",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 37.2,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.0,
+      "gpt-3.5-turbo-1106": 1.0,
+      "gpt-4-1106-preview": 0.0,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 25.2,
+      "mistralai/mixtral-8x7b-chat": 1.6,
+      "zero-one-ai/Yi-34B-Chat": 35.0
+    }
+  },
+  {
+    "w_c": 1.0,
+    "w_q": 0.0,
+    "mean_quality": 0.5120478272438049,
+    "mean_cost_usd": 0.00014063769776839763,
+    "top_action": "mistralai/mistral-7b-chat",
+    "action_distribution_pct": {
+      "WizardLM/WizardLM-13B-V1.2": 21.8,
+      "claude-instant-v1": 0.0,
+      "claude-v1": 0.0,
+      "claude-v2": 0.0,
+      "gpt-3.5-turbo-1106": 0.0,
+      "gpt-4-1106-preview": 0.0,
+      "meta/code-llama-instruct-34b-chat": 0.0,
+      "meta/llama-2-70b-chat": 0.0,
+      "mistralai/mistral-7b-chat": 78.2,
+      "mistralai/mixtral-8x7b-chat": 0.0,
+      "zero-one-ai/Yi-34B-Chat": 0.0
+    }
+  }
+]

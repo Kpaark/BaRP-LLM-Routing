@@ -1,0 +1,1 @@
+step,loss,mean_reward,mean_quality,mean_cost_usd,mean_w_q,mean_w_c,policy_entropy_nats,val_quality,val_cost_usd,val_action_entropy_bits

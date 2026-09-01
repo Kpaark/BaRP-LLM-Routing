@@ -1,0 +1,24 @@
+{"time":"2026-07-09T17:58:38.253917-07:00","level":"INFO","msg":"wandb-core"}
+{"time":"2026-07-09T17:58:38.258165-07:00","level":"INFO","msg":"stream: starting","core version":"0.27.2"}
+{"time":"2026-07-09T17:58:38.546164-07:00","level":"INFO","msg":"stream: created new stream","id":"bfot9cnn"}
+{"time":"2026-07-09T17:58:38.546264-07:00","level":"INFO","msg":"handler: started"}
+{"time":"2026-07-09T17:58:38.546654-07:00","level":"INFO","msg":"stream: started"}
+{"time":"2026-07-09T17:58:38.546662-07:00","level":"INFO","msg":"writer: started","stream_id":"bfot9cnn"}
+{"time":"2026-07-09T17:58:38.546933-07:00","level":"INFO","msg":"sender: started"}
+{"time":"2026-07-09T17:58:39.225002-07:00","level":"INFO","msg":"filestream: sending request","total_files":1,"console_offset":0,"console_lines":1}
+{"time":"2026-07-09T17:58:39.5689-07:00","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-07-09T17:58:41.079725-07:00","level":"ERROR","msg":"error adding file to cache","err":"open /Users/kpark/Library/Caches/wandb/artifacts/tmp/1377849849: operation not permitted"}
+{"time":"2026-07-09T17:58:54.225188-07:00","level":"INFO","msg":"filestream: sending request","total_files":4,"history_offset":0,"history_lines":51,"events_offset":0,"events_lines":1,"console_offset":1,"console_lines":56,"uploaded_len":3}
+{"time":"2026-07-09T17:58:54.606746-07:00","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-07-09T17:59:09.225362-07:00","level":"INFO","msg":"filestream: sending request","total_files":4,"history_offset":51,"history_lines":54,"events_offset":1,"events_lines":1,"console_offset":57,"console_lines":59}
+{"time":"2026-07-09T17:59:09.53051-07:00","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-07-09T17:59:24.225907-07:00","level":"INFO","msg":"filestream: sending request","total_files":4,"history_offset":105,"history_lines":54,"events_offset":2,"events_lines":1,"console_offset":116,"console_lines":59}
+{"time":"2026-07-09T17:59:24.589491-07:00","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-07-09T17:59:36.241326-07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2026-07-09T17:59:36.241878-07:00","level":"INFO","msg":"filestream: sending request","total_files":3,"history_offset":159,"history_lines":43,"console_offset":175,"console_lines":47,"uploaded_len":3,"complete":true,"exit_code":0}
+{"time":"2026-07-09T17:59:36.591033-07:00","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-07-09T17:59:36.593308-07:00","level":"INFO","msg":"handler: operation stats","stats":{}}
+{"time":"2026-07-09T17:59:36.602672-07:00","level":"INFO","msg":"stream: finishing up"}
+{"time":"2026-07-09T17:59:36.602758-07:00","level":"INFO","msg":"handler: closed"}
+{"time":"2026-07-09T17:59:36.603151-07:00","level":"INFO","msg":"sender: closed"}
+{"time":"2026-07-09T17:59:36.603176-07:00","level":"INFO","msg":"stream: all finished"}

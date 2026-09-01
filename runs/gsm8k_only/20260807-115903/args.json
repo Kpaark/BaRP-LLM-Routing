@@ -1,0 +1,36 @@
+{
+  "data_dir": "data_gsm8k_only",
+  "out_dir": "runs/gsm8k_only",
+  "steps": 10000,
+  "batch_size": 256,
+  "lr": 0.0003,
+  "beta": 0.01,
+  "tau": null,
+  "pref_hidden": 256,
+  "pref_out": 768,
+  "head_hidden": 256,
+  "val_every": 500,
+  "log_every": 50,
+  "seed": 42,
+  "device": "auto",
+  "wandb": false,
+  "wandb_project": "barp-llm-routing",
+  "wandb_run_name": null,
+  "wandb_entity": null,
+  "wandb_group": null,
+  "wandb_tags": null,
+  "resolved_tau": 0.008270000107586384,
+  "split_mode": "in_distribution",
+  "split_spec": {
+    "name": "gsm8k_only",
+    "train_families": [
+      "GSM8K"
+    ],
+    "test_families": [
+      "GSM8K"
+    ],
+    "val_frac": 0.15,
+    "test_frac": 0.15,
+    "seed": 42
+  }
+}
